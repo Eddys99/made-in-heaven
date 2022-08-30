@@ -1,15 +1,18 @@
-const PostJobsController = require('../controllers/post-job-controller');
+const MasterController = require('../controllers/master-controller');
 
 class Router {
     constructor(express) {
         const router = express.Router();
         const app = express();
 
+        router.route('/register-user')
+            .post(MasterController.registerUser);
+
         router.route('/save-post')
-            .post(PostJobsController.saveJob);
+            .post(MasterController.saveJob);
 
         router.route('/post')
-            .post(PostJobsController.testPost);
+            .post(MasterController.testPost);
 
         app.use('/', router);
 

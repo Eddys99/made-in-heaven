@@ -6,7 +6,12 @@ const PostJobDTO = require('../dtos/post-job-dto');
 
 const $LABEL = 'Master-Controller'
 
-class PostJobController {
+class MasterController {
+
+    static registerUser(request, response) {
+        const $JOB_LABEL = 'registerUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+    }
 
     static saveJob(request, response) {
         const $JOB_LABEL = 'saveJob', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
@@ -32,4 +37,4 @@ class PostJobController {
     }
 }
 
-module.exports = PostJobController;
+module.exports = MasterController;
