@@ -1,6 +1,6 @@
 'use strict';
 
-class NxError {
+class setError {
 
     constructor(where, error, data, msg) {
         this.where = where;
@@ -15,4 +15,4 @@ class NxError {
     }
 }
 
-module.exports = NxError;
+module.exports = setError;

@@ -1,6 +1,6 @@
 'use strict';
 
-class NxDate {
+class setDate {
     constructor(date = null, timezone = 'UTC', timezoneType = 3 ) {
         const _date = (date) ? date : new Date();
 
@@ -78,4 +78,4 @@ class NxDate {
     }
 }
 
-module.exports = NxDate;
+module.exports = setDate;

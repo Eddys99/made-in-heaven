@@ -1,6 +1,6 @@
 'use strict';
 
-class NxUtil {
+class getUtil {
 
     static isString(data) {
         return (typeof data === 'string');
@@ -23,7 +23,7 @@ class NxUtil {
     }
 
     static isObjectWithKeys(data) {
-        return (NxUtil.isObject(data) && !!data && Object.keys(data).length > 0);
+        return (getUtil.isObject(data) && !!data && Object.keys(data).length > 0);
     }
 
     static isNumber(data) {
@@ -40,8 +40,8 @@ class NxUtil {
 
 
     static hasCallbackFn(callbackFn) {
-        return (callbackFn && NxUtil.isFunction(callbackFn));
+        return (callbackFn && getUtil.isFunction(callbackFn));
     }
 }
 
-module.exports = NxUtil;
+module.exports = getUtil;
