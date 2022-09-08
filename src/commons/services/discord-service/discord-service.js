@@ -1,10 +1,14 @@
 const axios = require('axios');
 const Url = require('url');
 
+const Logger = require('src/commons/logger/logger-config');
+
+const SendToMaster = require('src/commons/services/discord-service/send-to-master');
 const FormDataDTO = require('src/commons/dtos/form-data-dto.js');
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
+const ResponseDTO = require('src/commons/dtos/response-dto');
 const HeadersDTO = require('src/commons/dtos/headers-dto.js');
-const HTTPRequestService = require("../http-request-service");
+const UserCredentialsDTO = require('src/commons/dtos/user-credentials-dto.js');
 
 const $LABEL = 'DiscordServices';
 
@@ -18,22 +22,23 @@ class DiscordService {
         return new Promise((resolve, reject) => {
             if (code) {
                 return axios.post('https://discord.com/api/v10/oauth2/token', formData.toString(), headers)
-                    .then(_response => {
-                        const payload = new UserCredentialsDTO('test_uid', _response.data);
-                        return HTTPRequestService.makeRequest(`http://localhost:3035/register-user`, payload, null, (error, result) => {
-                            if (error) {
-                                Logger.error(`${$LOG_LABEL} request failed`, new ErrorDTO(error));
-                                return reject(error);
-                            } else {
-                                Logger.debug(`${$LOG_LABEL} request done`, result);
-                                return resolve(result);
-                            }
-                        });
+                    .then(response => {
+                        const payload = new UserCredentialsDTO('test_uid', response.data);
+
+                        return SendToMaster.registerUser(payload)
+                            .then(_response => {
+                                Logger.debug(`${$LOG_LABEL} Credentials sent to Master-Worker: `, new ResponseDTO(_response));
+                            })
+                            .catch(error => {
+                                Logger.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, new ErrorDTO(error));
+                            });
                     })
                     .catch(error => {
                         Logger.error(`${$LOG_LABEL} Authentication failed`, new ErrorDTO(error));
                         return reject(error);
                     });
+            } else {
+                Logger.error(`${$LOG_LABEL} Something went wrong with "code": `, new ErrorDTO(code));
             }
         });
     }
@@ -46,7 +51,7 @@ class DiscordService {
         return new Promise((resolve, reject) => {
             return axios.post('https://discord.com/api/v10/oauth2/token', formData.toString(), headers)
                 .then(result => {
-                    Logger.debug(`${$LOG_LABEL} User's tokens refreshed: `, result.data);
+                    Logger.debug(`${$LOG_LABEL} User's tokens refreshed: `, new ResponseDTO(result.data));
                     return resolve(result.data);
 
                 })
@@ -64,7 +69,7 @@ class DiscordService {
         return new Promise((resolve, reject) => {
             return axios.get(`https://discord.com/api/v10/users/@me/guilds`, headers)
                 .then(_response => {
-                    Logger.debug(`${$LOG_LABEL} discord servers found: `, _response.data);
+                    Logger.debug(`${$LOG_LABEL} discord servers found: `, new ResponseDTO(_response.data));
                     const result = _response.data.map((element) => {
                         return {
                             id: element.id,
@@ -89,7 +94,7 @@ class DiscordService {
         return new Promise((resolve, reject) => {
             return axios.post('https://discord.com/api/v10/oauth2/token/revoke', formData.toString(), headers)
                 .then(result => {
-                    Logger.debug(`${$LOG_LABEL} user logged out: `, result);
+                    Logger.debug(`${$LOG_LABEL} user logged out: `, new ResponseDTO(result));
                     return resolve(result);
                 })
                 .catch(error => {
@@ -105,7 +110,7 @@ class DiscordService {
 
         return new Promise((resolve, reject) => {
             return axios.get('https://discord.com/api/v10/users/@me', headers).then(response => {
-                Logger.debug(`${$LOG_LABEL} user logged out: `, response.data);
+                Logger.debug(`${$LOG_LABEL} user logged out: `, new ResponseDTO(response.data));
                 return resolve(response.data);
             }).catch(error => {
                 Logger.error(`${$LOG_LABEL} Can't find user: `, new ErrorDTO(error));

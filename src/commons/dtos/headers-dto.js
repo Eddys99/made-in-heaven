@@ -1,5 +1,5 @@
 class HeadersDTO {
-    constructor(type_of_header = null, data = { }) {
+    constructor(type_of_header = null, data = null) {
         if (!type_of_header && !data) {
             this.headers = {
                 'Content-type': 'application/x-www-form-urlencoded'
