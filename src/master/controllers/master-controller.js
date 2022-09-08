@@ -1,6 +1,7 @@
-const PostJobService = require('../services/post-job-services')
-
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
+const Logger = require('src/commons/logger/logger-config.js');
+
+const PostJobService = require('../services/post-job-services')
 
 const PostJobDTO = require('../dtos/post-job-dto');
 
@@ -19,11 +20,11 @@ class MasterController {
 
         return PostJobService.saveJob(payload)
             .then(_response => {
-                console.info(`${$LOG_LABEL} post job saved in DB: `, _response);
+                Logger.info(`${$LOG_LABEL} post job saved in DB: `, _response);
                 return response.status(200).json(_response);
             })
             .catch(error => {
-                console.error(`${$LOG_LABEL} post job failed to save in DB: `, new ErrorDTO(error));
+                Logger.error(`${$LOG_LABEL} post job failed to save in DB: `, new ErrorDTO(error));
                 return response.status(400).json(error);
             });
     }
@@ -31,7 +32,7 @@ class MasterController {
     static testPost(request, response) {
         const $JOB_LABEL = 'testPost', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = request.body;
-        console.info(`${$LOG_LABEL}: payload`, payload);
+        Logger.info(`${$LOG_LABEL}: payload`, payload);
 
         return response.json({ payload });
     }

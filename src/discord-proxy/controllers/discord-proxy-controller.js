@@ -1,5 +1,6 @@
 const DiscordService = require('src/commons/services/discord-service/discord-service.js');
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
+const Logger = require('src/commons/logger/logger-config.js');
 
 const $LABEL = 'Discord-Proxy-Controller'
 

@@ -1,3 +1,6 @@
+const ErrorDTO = require('src/commons/dtos/error-dto.js');
+const Logger = require('src/commons/logger/logger-config.js');
+
 const PostJobRepository = require('../repositories/post-job-repository');
 
 const $LABEL = 'PostJobServices';

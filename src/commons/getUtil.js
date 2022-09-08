@@ -6,7 +6,7 @@ class getUtil {
         return (typeof data === 'string');
     }
 
-    static isValidString(data) {
+    static isNotEmptyString(data) {
         return (typeof data === 'string' && data.length > 0);
     }
 

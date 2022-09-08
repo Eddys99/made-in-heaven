@@ -1,6 +1,7 @@
-const PostJob = require('../models/post-job');
-
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
+const Logger = require('src/commons/logger/logger-config.js');
+
+const PostJob = require('../models/post-job');
 
 const $LABEL = 'MasterRepository';
 
