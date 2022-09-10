@@ -15,10 +15,10 @@ class PostJobsRepository {
 
             return newJob.save((error, item) => {
                 if (error) {
-                    console.error(`${$LOG_LABEL} post job failed: `, new ErrorDTO(error));
+                    Logger.error(`${$LOG_LABEL} post job failed: `, new ErrorDTO(error));
                     return reject(error);
                 } else {
-                    console.info(`${$LOG_LABEL} post job saved: `, item);
+                    Logger.debug(`${$LOG_LABEL} post job saved: `, item);
                     return resolve(newJob);
                 }
             });
