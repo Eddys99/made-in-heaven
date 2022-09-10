@@ -20,7 +20,7 @@ class SendToMaster {
                     data: payload
             })
             .then(_response => {
-                Logger.debug(`${$LOG_LABEL} Credentials sent to Master-Worker: `, new ResponseDTO(_response));
+                Logger.debug(`${$LOG_LABEL} Credentials sent to Master-Worker: `, new ResponseDTO());
                 return resolve(_response);
             })
             .catch(error => {
