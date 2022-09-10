@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const getUtil = require('src/commons/getUtil');
+const setDate = require('src/commons/setDate');
 
 const PostJob = new Schema({
     request_id: {
@@ -10,7 +12,7 @@ const PostJob = new Schema({
         type: String,
         default: null
     },
-    content_text: {
+    message: {
         type: String,
         default: ''
     },
@@ -19,6 +21,7 @@ const PostJob = new Schema({
         default: []
     },
 
+    //timestamps
     updated_at: {
         date: {
             type: String,
@@ -57,6 +60,23 @@ const PostJob = new Schema({
     }
 }, {
     collection: 'post-job'
+});
+
+PostJob.methods.setUpdatedAt = function(value) {
+    this['updated_at'] = new setDate(value);
+}
+
+PostJob.methods.setDateProperty = function(property, value) {
+    this[property] = new setDate(value);
+}
+
+PostJob.pre('save', function(next) {
+    if (this.isNew) {
+        this.setDateProperty('created_at');
+    } else {
+        this.setUpdatedAt();
+    }
+    next();
 });
 
 module.exports = mongoose.model('PostJob', PostJob);

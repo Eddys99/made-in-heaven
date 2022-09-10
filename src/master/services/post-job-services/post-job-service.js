@@ -2,9 +2,9 @@ const ErrorDTO = require('src/commons/dtos/error-dto.js');
 const ResponseDTO = require('src/commons/dtos/response-dto');
 const Logger = require('src/commons/logger/logger-config.js');
 
-const PostJobRepository = require('../repositories/post-job-repository');
+const PostJobRepository = require('../../repositories/post-job-repository');
 
-const SavePostJob = require('../dtos/post-job-dto');
+const SavePostJob = require('./dtos/save-post-job');
 
 const $LABEL = 'PostJobService';
 

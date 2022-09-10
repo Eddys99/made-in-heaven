@@ -2,9 +2,11 @@ const ErrorDTO = require('src/commons/dtos/error-dto.js');
 const ResponseDTO = require('src/commons/dtos/response-dto');
 const Logger = require('src/commons/logger/logger-config.js');
 
-const PostJobService = require('../services/post-job-service')
+const PostJobService = require('../services/post-job-services/post-job-service');
+const UserServices = require('../services/user-services/user-services');
 
 const PostJobDTO = require('../dtos/post-job-dto');
+const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 
 const $LABEL = 'Master-Controller'
 
@@ -12,7 +14,15 @@ class MasterController {
 
     static registerUser(request, response) {
         const $JOB_LABEL = 'registerUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserCredentialsDTO(request.body);
 
+        return UserServices.registerUser(payload)
+            .then(_response => {
+
+            })
+            .catch(error => {
+
+            });
     }
 
     static saveJob(request, response) {
