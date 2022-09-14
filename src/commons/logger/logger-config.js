@@ -5,7 +5,7 @@ const myFormat = printf(({ level, message, timestamp }) => {
     return `[${timestamp}][${level}]: ${message}`;
 });
 
-const myLogger = createLogger({
+const Logger = createLogger({
     format: combine(
         format.colorize(),
         timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
@@ -14,8 +14,4 @@ const myLogger = createLogger({
     transports: [new transports.Console()]
 });
 
-myLogger.debug('hello debug');
-myLogger.error('hello error');
-myLogger.info('hello info');
-
-module.exports = myLogger;
+module.exports = Logger;
