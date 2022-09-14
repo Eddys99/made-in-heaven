@@ -8,7 +8,7 @@ const UserServices = require('../services/user-services/user-services');
 const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 
-const $LABEL = 'Master-Controller'
+const $LABEL = 'MasterController'
 
 class MasterController {
 
