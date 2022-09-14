@@ -10,4 +10,4 @@ const app = express();
 app.use(body_parser.json());
 app.use(new Routes(express));
 
-app.listen(config.DiscordProxy.PORT, () => console.log(`Application started on port ${config.DiscordProxy.PORT}`));
+app.listen(config.DiscordProxy.PORT, () => Logger.info(`Application started on port ${config.DiscordProxy.PORT}`));
