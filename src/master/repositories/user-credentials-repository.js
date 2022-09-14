@@ -15,7 +15,7 @@ class UserCredentialsRepository {
 
             return newUser.save((error, item) => {
                 if (error) {
-                    Logger.error(`${$LOG_LABEL} user credentials failed: `, new ErrorDTO(error));
+                    Logger.error(`${$LOG_LABEL} failed to save user credentials: `, new ErrorDTO(error));
                     return reject(error);
                 } else {
                     Logger.debug(`${$LOG_LABEL} user credentials saved: `, item);

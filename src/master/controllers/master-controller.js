@@ -18,10 +18,12 @@ class MasterController {
 
         return UserServices.registerUser(payload)
             .then(_response => {
-
+                Logger.debug(`${$LOG_LABEL} user credentials saved in DB: `, new ResponseDTO());
+                return response.status(200).json(new ResponseDTO());
             })
             .catch(error => {
-
+                Logger.error(`${$LOG_LABEL} failed to save user credentials: `, new ErrorDTO(error));
+                return response.status(400).json(error);
             });
     }
 
@@ -38,14 +40,6 @@ class MasterController {
                 Logger.error(`${$LOG_LABEL} post job failed to save in DB: `, new ErrorDTO(error));
                 return response.status(400).json(error);
             });
-    }
-
-    static testPost(request, response) {
-        const $JOB_LABEL = 'testPost', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const payload = request.body;
-        Logger.debug(`${$LOG_LABEL}: payload`, payload);
-
-        return response.json({ payload });
     }
 }
 

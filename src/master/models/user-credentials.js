@@ -31,6 +31,24 @@ const UserCredentials = new Schema({
     scope: {
         type: String,
         default: ''
+    },
+    expires_at: {
+        date: {
+            type: String,
+            default: null
+        },
+        timestamp: {
+            type: String,
+            default: null
+        },
+        timezone_type: {
+            type: Number,
+            default: 3
+        },
+        timezone: {
+            type: String,
+            default: 'UTC'
+        }
     }
 }, {
    collection: 'user-credentials'

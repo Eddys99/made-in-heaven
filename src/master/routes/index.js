@@ -12,7 +12,7 @@ class Router {
             .post(MasterController.saveJob);
 
         router.route('/post')
-            .post(MasterController.testPost);
+            //.post(MasterController.testPost);
 
         app.use('/', router);
 
