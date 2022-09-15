@@ -25,7 +25,7 @@ class SendToMaster {
             })
             .catch(error => {
                 Logger.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, new ErrorDTO(error));
-                return resolve(error);
+                return reject(error);
             });
         });
     }
