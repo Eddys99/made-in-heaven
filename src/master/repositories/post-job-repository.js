@@ -1,6 +1,3 @@
-const ErrorDTO = require('src/commons/dtos/error-dto.js');
-const Logger = require('src/commons/logger/logger-config.js');
-
 const PostJob = require('../models/post-job');
 
 const $LABEL = 'MasterRepository';
@@ -15,10 +12,10 @@ class PostJobsRepository {
 
             return newJob.save((error, item) => {
                 if (error) {
-                    Logger.error(`${$LOG_LABEL} post job failed: `, new ErrorDTO(error));
+                    console.error(`${$LOG_LABEL} post job failed: `, { error });
                     return reject(error);
                 } else {
-                    Logger.debug(`${$LOG_LABEL} post job saved: `, item);
+                    console.log(`${$LOG_LABEL} post job saved: `, { item });
                     return resolve(newJob);
                 }
             });

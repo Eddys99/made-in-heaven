@@ -1,6 +1,3 @@
-const ErrorDTO = require('src/commons/dtos/error-dto.js');
-const Logger = require('src/commons/logger/logger-config.js');
-
 const UserRepository = require('../../repositories/user-credentials-repository');
 
 const $LABEL = 'UserServices';
@@ -13,11 +10,11 @@ class UserServices {
         return new Promise((resolve, reject) => {
             return UserRepository.saveUser(payload)
                 .then(response => {
-                    Logger.debug(`${$LOG_LABEL} user credentials saved: `, response);
+                    console.log(`${$LOG_LABEL} user credentials saved: `, { response });
                     return resolve(response);
                 })
                 .catch(error => {
-                    Logger.error(`${$LOG_LABEL} failed to save user credentials: `, new ErrorDTO(error));
+                    console.error(`${$LOG_LABEL} failed to save user credentials: `, { error });
                     return reject(error);
                 });
         });

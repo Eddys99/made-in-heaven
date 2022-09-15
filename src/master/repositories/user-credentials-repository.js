@@ -1,6 +1,3 @@
-const ErrorDTO = require('src/commons/dtos/error-dto.js');
-const Logger = require('src/commons/logger/logger-config.js');
-
 const UserModel = require('../models/user-credentials');
 
 const $LABEL = 'MasterRepository';
@@ -15,10 +12,10 @@ class UserCredentialsRepository {
 
             return newUser.save((error, item) => {
                 if (error) {
-                    Logger.error(`${$LOG_LABEL} failed to save user credentials: `, new ErrorDTO(error));
+                    console.error(`${$LOG_LABEL} failed to save user credentials: `, { error });
                     return reject(error);
                 } else {
-                    Logger.debug(`${$LOG_LABEL} user credentials saved: `, item);
+                    console.log(`${$LOG_LABEL} user credentials saved: `, { item });
                     return resolve(newUser);
                 }
             });

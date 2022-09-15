@@ -1,11 +1,5 @@
 const axios = require("axios");
 
-const Logger = require('src/commons/logger/logger-config');
-
-const ErrorDTO = require('src/commons/dtos/error-dto');
-const HeadersDTO = require('src/commons/dtos/headers-dto');
-const ResponseDTO = require("src/commons/dtos/response-dto");
-
 const $LABEL = 'SendToMaster';
 
 class SendToMaster {
@@ -19,12 +13,12 @@ class SendToMaster {
                     url: 'http://localhost:3035/register-user',
                     data: payload
             })
-            .then(_response => {
-                Logger.debug(`${$LOG_LABEL} Credentials sent to Master-Worker: `, new ResponseDTO());
-                return resolve(_response);
+            .then(response => {
+                console.log(`${$LOG_LABEL} Credentials sent to Master-Worker: `, { response });
+                return resolve(response);
             })
             .catch(error => {
-                Logger.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, new ErrorDTO(error));
+                console.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, { error });
                 return reject(error);
             });
         });

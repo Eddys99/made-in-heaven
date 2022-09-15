@@ -8,6 +8,10 @@ class HeadersDTO {
             this.headers = {
                 'Authorization': `Bearer ${data}`
             }
+        } else if (type_of_header === 'Authorization_bot') {
+            this.headers = {
+                'Authorization': `Bot ${data}`
+            }
         }
 
         return this;

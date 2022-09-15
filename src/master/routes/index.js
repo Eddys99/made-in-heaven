@@ -8,11 +8,8 @@ class Router {
         router.route('/register-user')
             .post(MasterController.registerUser);
 
-        router.route('/save-post')
-            .post(MasterController.saveJob);
-
-        router.route('/post')
-            //.post(MasterController.testPost);
+        router.route('/post-message')
+            .post(MasterController.postJob);
 
         app.use('/', router);
 

@@ -1,6 +1,5 @@
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
 const ResponseDTO = require('src/commons/dtos/response-dto');
-const Logger = require('src/commons/logger/logger-config.js');
 
 const PostJobService = require('../services/post-job-services/post-job-service');
 const UserServices = require('../services/user-services/user-services');
@@ -18,27 +17,27 @@ class MasterController {
 
         return UserServices.registerUser(payload)
             .then(_response => {
-                Logger.debug(`${$LOG_LABEL} user credentials saved in DB: `, new ResponseDTO());
+                console.log(`${$LOG_LABEL} user credentials saved in DB: `, { _response });
                 return response.status(200).json(new ResponseDTO());
             })
             .catch(error => {
-                Logger.error(`${$LOG_LABEL} failed to save user credentials: `, new ErrorDTO(error));
-                return response.status(400).json(error);
+                console.error(`${$LOG_LABEL} failed to save user credentials: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
             });
     }
 
-    static saveJob(request, response) {
-        const $JOB_LABEL = 'saveJob', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+    static postJob(request, response) {
+        const $JOB_LABEL = 'postJob', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new PostJobDTO(request.body);
 
         return PostJobService.saveJob(payload)
             .then(_response => {
-                Logger.debug(`${$LOG_LABEL} post job saved in DB: `, new ResponseDTO());
-                return response.status(200).json(_response);
+                console.log(`${$LOG_LABEL} post job saved in DB: `, { _response });
+                return response.status(200).json(new ResponseDTO());
             })
             .catch(error => {
-                Logger.error(`${$LOG_LABEL} post job failed to save in DB: `, new ErrorDTO(error));
-                return response.status(400).json(error);
+                console.error(`${$LOG_LABEL} post job failed to save in DB: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
             });
     }
 }
