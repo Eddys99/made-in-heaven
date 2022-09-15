@@ -2,7 +2,7 @@ const ErrorDTO = require('src/commons/dtos/error-dto.js');
 const ResponseDTO = require('src/commons/dtos/response-dto');
 
 const PostJobService = require('../services/post-job-services/post-job-service');
-const UserServices = require('../services/user-services/user-services');
+const UserService = require('../services/user-services/user-services');
 
 const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
@@ -15,7 +15,7 @@ class MasterController {
         const $JOB_LABEL = 'registerUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new UserCredentialsDTO(request.body);
 
-        return UserServices.registerUser(payload)
+        return UserService.registerUser(payload)
             .then(_response => {
                 console.log(`${$LOG_LABEL} user credentials saved in DB: `, { _response });
                 return response.status(200).json(new ResponseDTO());

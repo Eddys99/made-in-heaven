@@ -1,6 +1,6 @@
 class UserCredentialsDTO {
-    constructor(user_uid, data) {
-        this.user_uid = user_uid;
+    constructor(user_id, data) {
+        this.user_id = user_id;
         this.data = data;
     }
 }

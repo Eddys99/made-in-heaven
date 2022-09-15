@@ -4,7 +4,7 @@ const $LABEL = 'MasterRepository';
 
 class PostJobsRepository {
 
-    static saveJob (data) {
+    static saveJob(data) {
         const $JOB_LABEL = 'create', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
         return new Promise((resolve, reject) => {

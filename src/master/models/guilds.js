@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const GuildSchema = new Schema({
-    user_uid: {
+    user_id: {
         type: String,
         default: ''
     },
-    discord_user_uid: {
+    discord_user_id: {
         type: String,
         default: ''
     },

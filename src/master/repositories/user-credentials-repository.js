@@ -4,7 +4,7 @@ const $LABEL = 'MasterRepository';
 
 class UserCredentialsRepository {
 
-    static saveUser (data) {
+    static saveUser(data) {
         const $JOB_LABEL = 'saveUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
         return new Promise((resolve, reject) => {

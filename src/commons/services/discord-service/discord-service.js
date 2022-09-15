@@ -121,10 +121,9 @@ class DiscordService {
         });
     }
 
-    static sendMessageToDiscord(payload) {
+    static sendMessageToDiscord(payload, target_channels) {
         const $JOB_LABEL = 'sendMessageToDiscord', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const message_object = new MessageDTO(payload);
-        const target_channels = payload.target_channels;
         const data = JSON.stringify(message_object);
 
         axios({
