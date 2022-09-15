@@ -10,22 +10,6 @@ class setDate {
         this.setTimezoneType(timezoneType, _date);
     }
 
-    getTimestamp() {
-        return this.timestamp;
-    }
-
-    getDate() {
-        return this.date;
-    }
-
-    getTimezoneType() {
-        return this.timezone_type;
-    }
-
-    getTimezone() {
-        return this.timezone;
-    }
-
     setTimestamp(date) {
         this.timestamp = date.getTime().toString();
     }
@@ -55,26 +39,6 @@ class setDate {
             .replace('Z', '');
 
         return d.slice(0, d.length - 3);
-    }
-
-    getTsToDateObj(ts) {
-        const date = new Date(ts);
-
-        return {
-            timestamp: date.getTime().toString(),
-            date: this.getDatePretty(date),
-            timezone_type: 3,
-            timezone: 'UTC'
-        };
-    }
-
-    toObject() {
-        return {
-            timestamp: this.getTimestamp(),
-            date: this.getDate(),
-            timezone_type: this.getTimezoneType(),
-            timezone: this.getTimezone()
-        };
     }
 }
 
