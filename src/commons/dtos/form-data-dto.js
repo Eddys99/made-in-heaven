@@ -13,7 +13,7 @@ class FormDataDTO {
         } else if (type_of_form_data === 'authenticateUser') {
             this.grant_type = 'authorization_code';
             this.code = data.toString();
-            this.redirect_uri = 'http://localhost:3070/api/auth/discord/redirect'
+            this.redirect_uri = 'http://localhost:3050/Oauth2/authorize'
         }
     }
 }

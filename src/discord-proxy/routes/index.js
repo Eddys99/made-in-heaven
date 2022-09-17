@@ -6,7 +6,7 @@ class Router {
         const app = express();
 
         router.route('/Oauth2/authorize')
-            .post(DiscordProxyController.handleAuthorize);
+            .get(DiscordProxyController.handleAuthorize);
 
         router.route('/Oauth2/refresh')
             .post(DiscordProxyController.handleRefreshToken);
