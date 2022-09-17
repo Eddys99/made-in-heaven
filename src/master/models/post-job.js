@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 const setDate = require('src/commons/setDate');
 
 const PostJob = new Schema({
+    request_id: {
+        type: String,
+        default: ''
+    },
     user_id: {
         type: String,
         default: null
