@@ -1,5 +1,8 @@
 const DiscordService = require('src/commons/services/discord-service/discord-service.js');
 
+const ResponseDTO = require('src/commons/dtos/response-dto');
+const ErrorDTO = require('src/commons/dtos/error-dto');
+
 const $LABEL = 'Discord-Proxy-Controller'
 
 class DiscordProxyController {
@@ -11,11 +14,11 @@ class DiscordProxyController {
         return DiscordService.authenticateUser(code)
             .then(_response => {
                 console.log(`${$LOG_LABEL} Authentication done`, { _response });
-                return response.sendStatus(200);
+                return response.status(200).json(new ResponseDTO());
             })
             .catch(error => {
                 console.error(`${$LOG_LABEL} Authentication failed`, { error });
-                return response.sendStatus(400);
+                return response.status(400).json(new ErrorDTO(error));
             });
     }
 

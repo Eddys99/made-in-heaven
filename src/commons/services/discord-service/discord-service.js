@@ -22,14 +22,20 @@ class DiscordService {
             if (code) {
                 return axios.post('https://discord.com/api/v10/oauth2/token', formData.toString(), headers)
                     .then(response => {
-                        const payload = new UserCredentialsDTO('test_uid', response.data);
-
-                        return SendToMaster.registerUser(payload)
+                        return DiscordService.getDiscordUserCredentials(response.data.access_token)
                             .then(_response => {
-                                console.log(`${$LOG_LABEL} Credentials sent to Master-Worker: `, { _response });
+                                const payload = new UserCredentialsDTO('test_uid', _response.id, response.data);
+
+                                return SendToMaster.registerUser(payload)
+                                    .then(_response => {
+                                        console.log(`${$LOG_LABEL} Credentials sent to Master-Worker: `, { _response });
+                                    })
+                                    .catch(error => {
+                                        console.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, { error });
+                                    });
                             })
                             .catch(error => {
-                                console.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, { error });
+                                console.error(`${$LOG_LABEL} discord user's credentials search failed: `, { error });
                             });
                     })
                     .catch(error => {
