@@ -29,13 +29,16 @@ class DiscordService {
                                 return SendToMaster.registerUser(payload)
                                     .then(_response => {
                                         console.log(`${$LOG_LABEL} Credentials sent to Master-Worker: `, { _response });
+                                        return resolve(_response);
                                     })
                                     .catch(error => {
                                         console.error(`${$LOG_LABEL} Couldn't sent to Master-Worker: `, { error });
+                                        return reject(error);
                                     });
                             })
                             .catch(error => {
                                 console.error(`${$LOG_LABEL} discord user's credentials search failed: `, { error });
+                                return reject(error);
                             });
                     })
                     .catch(error => {
@@ -44,6 +47,7 @@ class DiscordService {
                     });
             } else {
                 console.error(`${$LOG_LABEL} Something went wrong with "code": `, { code });
+                return reject({ error: "{ code } is invalid"});
             }
         });
     }
