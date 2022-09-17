@@ -5,11 +5,11 @@ class Router {
         const router = express.Router();
         const app = express();
 
-        router.route('/get')
-            .get(MasterController.testGet);
+        router.route('/register-user')
+            .post(MasterController.registerUser);
 
-        router.route('/post')
-            .post(MasterController.testPost);
+        router.route('/post-message')
+            .post(MasterController.postJob);
 
         app.use('/', router);
 

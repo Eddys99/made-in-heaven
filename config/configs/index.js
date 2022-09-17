@@ -1,9 +1,10 @@
 'use strict';
 
 const configs = [
-    require('./made-in-heaven')
+    require('./master-worker'),
+    require('./discord-config'),
+    require('./discord-proxy')
 ];
-
 
 module.exports = {
     load: (env) => {

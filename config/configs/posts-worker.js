@@ -6,11 +6,11 @@ const DEFAULT_UNIX_ENV    = { HOST: '0.0.0.0',   PORT: 3035 };
 const DEFAULT_ENV =  (/^win/.test(process.platform)) ? DEFAULT_WINDOWS_ENV : DEFAULT_UNIX_ENV;
 
 module.exports = (env) => {
-    const worker = env.MadeInHeaven;
+    const worker = env.PostsWorker;
 
     return {
-        made_in_heaven: {
-            name: (worker && worker.name) ? worker.name : 'made-in-heaven',
+        PostsWorker: {
+            name: (worker && worker.name) ? worker.name : 'PostsWorker',
             HOST: (worker && worker.HOST) ? worker.HOST : DEFAULT_ENV.HOST,
             PORT: (worker && worker.PORT) ? worker.PORT : DEFAULT_ENV.PORT,
         }
