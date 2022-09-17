@@ -32,11 +32,18 @@ class MasterController {
 
         return PostJobService.saveJob(payload)
             .then(_response => {
-                console.log(`${$LOG_LABEL} post job saved in DB: `, { _response });
-                return response.status(200).json(new ResponseDTO());
+                PostJobService.makePost(payload)
+                    .then(__response => {
+                        console.log(`${$LOG_LABEL} message sent on discord and saved in DB: `, { __response });
+                        return response.status(200).json(new ResponseDTO());
+                    })
+                    .catch(error => {
+                        console.error(`${$LOG_LABEL} message failed to send on discord: `, { error });
+                        return response.status(400).json(new ErrorDTO(error));
+                    });
             })
             .catch(error => {
-                console.error(`${$LOG_LABEL} post job failed to save in DB: `, { error });
+                console.error(`${$LOG_LABEL} message failed to save in DB: `, { error });
                 return response.status(400).json(new ErrorDTO(error));
             });
     }
