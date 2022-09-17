@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const getUtil = require('src/commons/getUtil');
 const setDate = require('src/commons/setDate');
 
 const UserCredentials = new Schema({
@@ -55,14 +54,9 @@ const UserCredentials = new Schema({
 });
 
 UserCredentials.methods.updateExpiresAt = function(property) {
-    if (getUtil.isNotEmptyString(property)) {
-        const value = new Date(Date.now());
-        value.setDate(value.getDate() + 7);
-
-        this[property] = new setDate(value);
-    } else {
-        throw new Error('Missing property !');
-    }
+    const value = new Date(Date.now());
+    value.setDate(value.getDate() + 7);
+    this[property] = new setDate(value);
 }
 
 UserCredentials.methods.setDateProperty = function(property, value) {
