@@ -40,7 +40,7 @@ const PostJob = new Schema({
         }
     }
 }, {
-    collection: 'post-job'
+    collection: 'post-jobs'
 });
 
 PostJob.methods.setDateProperty = function(property, value) {
