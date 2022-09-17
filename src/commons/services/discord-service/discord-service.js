@@ -1,17 +1,15 @@
 const axios = require('axios');
 const Url = require('url');
 
-const config = ('config');
-
 const SendToMaster = require('src/commons/services/discord-service/send-to-master');
 const FormDataDTO = require('src/commons/dtos/form-data-dto.js');
 const HeadersDTO = require('src/commons/dtos/headers-dto.js');
 const UserCredentialsDTO = require('src/commons/dtos/user-credentials-dto.js');
 
 const MessageDTO = require('./dtos/message-dto');
+const SendMessageAxiosConfig = require('./dtos/send-message-axios-config');
 
 const $LABEL = 'DiscordServices';
-const $BOT_TOKEN = config.DiscordConfig.token;
 
 class DiscordService {
 
@@ -126,21 +124,16 @@ class DiscordService {
         const message_object = new MessageDTO(payload);
         const data = JSON.stringify(message_object);
 
-        axios({
-            method: 'POST',
-            url: `https://discord.com/api/v10/channels/${target_channels[i]}/messages`,
-            headers: {
-                'Authorization': `Bot ${$BOT_TOKEN}`
-            },
-            data: data,
-        })
-            .then(response => {
-                console.log(`${$LOG_LABEL} Message sent to Discord channel: `, { response });
-            })
-            .catch(error => {
-                console.error(`${$LOG_LABEL} Couldn't sent message to Discord channel: `, { error });
-            });
-
+        target_channels.forEach((channel_id) => {
+            const axios_config = new SendMessageAxiosConfig(channel_id, data);
+            axios(axios_config)
+                .then(response => {
+                    console.log(`${$LOG_LABEL} Message sent to Discord channel: `, { response });
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} Couldn't sent message to Discord channel: `, { error });
+                });
+        });
     }
 }
 
