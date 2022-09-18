@@ -11,6 +11,9 @@ class Router {
         router.route('/post-message')
             .post(MasterController.postJob);
 
+        router.route('/discord-server/addChannelOrServer')
+            .post(MasterController.addChannelOrServer)
+
         app.use('/', router);
 
         return app;

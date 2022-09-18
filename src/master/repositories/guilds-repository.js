@@ -53,6 +53,22 @@ class GuildsRepository {
             });
         });
     }
+
+    static updateGuild(filter, query) {
+        const $JOB_LABEL = 'getOneGuild', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+        return new Promise((resolve, reject) => {
+            GuildModel.updateOne(filter, query, null, (error, result) => {
+                if (error) {
+                    console.error(`${$LOG_LABEL} failed to update guild configuration: `, { error });
+                    return reject(error);
+                } else {
+                    console.log(`${$LOG_LABEL} guild configuration updated: `, { result });
+                    return resolve(result);
+                }
+            });
+        });
+    }
 }
 
 module.exports = GuildsRepository;

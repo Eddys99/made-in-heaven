@@ -3,9 +3,11 @@ const ResponseDTO = require('src/commons/dtos/response-dto');
 
 const PostJobService = require('../services/post-job-services/post-job-service');
 const UserService = require('../services/user-services/user-services');
+const GuildsService = require('../services/guilds-service/guilds-service');
 
 const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
+const GuildConfigurationDTO = require('../dtos/guild-configuration-dto');
 
 const $LABEL = 'MasterController'
 
@@ -45,6 +47,19 @@ class MasterController {
             .catch(error => {
                 console.error(`${$LOG_LABEL} message failed to save in DB: `, { error });
                 return response.status(400).json(new ErrorDTO(error));
+            });
+    }
+
+    static addChannelOrServer(request, response) {
+        const $JOB_LABEL = 'addChannelOrServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new GuildConfigurationDTO(request.body);
+
+        return GuildsService.saveGuildConfiguration(payload)
+            .then(_response => {
+
+            })
+            .catch(error => {
+
             });
     }
 }

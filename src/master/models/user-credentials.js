@@ -5,11 +5,13 @@ const setDate = require('src/commons/setDate');
 const UserCredentials = new Schema({
     user_id: {
         type: String,
-        default: ''
+        default: '',
+        unique: true
     },
     discord_user_id: {
         type: String,
-        default: ''
+        default: '',
+        unique: true
     },
     access_token: {
         type: String,
