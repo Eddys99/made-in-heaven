@@ -22,13 +22,13 @@ class GuildsService {
                         return GuildsService.checkIfChannelExists([payload.discord_user_id, payload.channel_id])
                             .then(_response => {
                                 if (_response) {
-                                    console.log(`${$LOG_LABEL} configuration already exists: `, { payload });
-                                    return resolve(payload);
+                                    console.error(`${$LOG_LABEL} configuration already exists: `, { payload });
+                                    return reject('channel is already registered.');
                                 } else {
                                     return GuildsService.addChannelToList(payload)
                                         .then(__response => {
                                             console.log(`${$LOG_LABEL} channel added to list: `, { payload });
-                                            return resolve(payload);
+                                            return resolve('channel registered.');
                                         })
                                         .catch(error => {
                                             console.error(`${$LOG_LABEL} failed to add channel to list: `, { error });
@@ -44,7 +44,7 @@ class GuildsService {
                         return GuildsRepository.saveGuild(payload)
                             .then(response => {
                                 console.log(`${$LOG_LABEL} guild configuration registered: `, { response });
-                                return resolve(response);
+                                return resolve('Server and channel registered');
                             })
                             .catch(error => {
                                 console.error(`${$LOG_LABEL} guild configuration failed to register: `, { error });

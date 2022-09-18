@@ -56,11 +56,33 @@ class MasterController {
 
         return GuildsService.saveGuildConfiguration(payload)
             .then(_response => {
-
+                return PostJobService.sendResponseToDiscordServer(_response, payload.channel_id)
+                    .then(__response => {
+                        console.log(`${$LOG_LABEL} channel/guild configuration saved: `, { __response });
+                        return response.status(200).json(new ResponseDTO());
+                    })
+                    .catch(error => {
+                        console.error(`${$LOG_LABEL} failed to send response message: `, { error });
+                        return response.status(400).json(new ErrorDTO(error));
+                    })
             })
             .catch(error => {
-
+                console.error(`${$LOG_LABEL} channel/guild configuration failed to save: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
             });
+    }
+
+    static removeChannel(request, response) {
+        const $JOB_LABEL = 'removeChannel', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+    }
+
+    static registerServer(request, response) {
+        const $JOB_LABEL = 'registerServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+    }
+
+    static removeServer(request, response) {
+        const $JOB_LABEL = 'removeServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
     }
 }
 
