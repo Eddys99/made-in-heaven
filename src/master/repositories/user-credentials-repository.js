@@ -15,11 +15,25 @@ class UserCredentialsRepository {
                     console.error(`${$LOG_LABEL} failed to save user credentials: `, { error });
                     return reject(error);
                 } else {
-                    console.log(`${$LOG_LABEL} user credentials saved: `, { item });
                     return resolve(newUser);
                 }
             });
-        })
+        });
+    }
+
+    static getUser(filter) {
+        const $JOB_LABEL = 'getUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+        return new Promise((resolve, reject) => {
+           UserModel.findOne(filter, null, null, (error, response) => {
+               if (error) {
+                   console.error(`${$LOG_LABEL} couldn't find user: `, { error });
+                   return reject(error);
+               } else {
+                   return resolve(response);
+               }
+           });
+        });
     }
 }
 

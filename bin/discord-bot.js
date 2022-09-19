@@ -1,12 +1,36 @@
 require('app-module-path').addPath(`${__dirname}/..`);
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { REST, Routes, Client, GatewayIntentBits } = require('discord.js');
 const axios = require('axios');
 
 const config = require('config');
 
-const $PREFIX = "!";
 const $LABEL = 'Discord-Bot';
+
+const commands = [
+    {
+        name: 'add-ch',
+        description: 'Register channel to your list.',
+    },
+    {
+        name: 'remove-ch',
+        description: 'Remove channel from your list.'
+    }
+];
+
+const rest = new REST({ version: '10'}).setToken(config.DiscordConfig.token);
+
+(async () => {
+    try {
+        console.log('Started refreshing application (/) commands.');
+
+        await rest.put(Routes.applicationCommands(config.DiscordConfig.client_id), { body: commands });
+
+        console.log('Successfully reloaded application (/) commands.');
+    } catch (error) {
+        console.error(error);
+    }
+})();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -15,60 +39,55 @@ client.on("ready", () => {
     console.log(`${$LOG_LABEL} Logged as ${client.user}`);
 });
 
-client.on("messageCreate", (message) => {
-    const $JOB_LABEL = 'messageCreate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+client.on("interactionCreate", async interaction => {
+    const $JOB_LABEL = 'interactionCreate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
-    if (message.content.startsWith($PREFIX)) {
-        const [CMD_NAME, ...args] = message.content
-            .trim()
-            .substring($PREFIX.length)
-            .split(/\s+/);
+    if (interaction.commandName === 'add-ch') {
+        const payload = {
+            discord_user_id: interaction.user.id,
+            server_id: interaction.guildId,
+            server_name: interaction.guild.name,
+            server_icon: interaction.guild.iconURL(),
+            owner_id: interaction.guild.ownerId,
+            channel_id: interaction.channelId,
+            channel_name: interaction.channel.name
+        };
 
-        if (CMD_NAME === "add-ch") {
-            const payload = {
-                discord_user_id: message.author.id,
-                server_id: message.guildId,
-                server_name: message.guild.name,
-                server_icon: message.guild.iconURL(),
-                owner_id: message.guild.ownerId,
-                channel_id: message.channelId,
-                channel_name: message.channel.name
-            }
-
-            return axios({
-                method: 'post',
-                url: 'http://localhost:3035/discord-server/add-channel',
-                data: payload
+        return axios({
+            method: 'POST',
+            url: 'http://localhost:3035/discord-servers/add-channel',
+            data: payload
+        })
+            .then(response => {
+                interaction.reply("Request sent, wait for response...");
+                return console.log(`${$LOG_LABEL} payload sent: `, { response });
             })
-                .then(response => {
-                    return console.log(`${$LOG_LABEL} payload sent: `, { response });
-                })
-                .catch(error => {
-                    message.channel.send("Couldn't register channel.");
-                    return console.error(`${$LOG_LABEL} failed to send payload: `, { error });
-                });
+            .catch(error => {
+                interaction.reply("Couldn't register channel.");
+                return console.error(`${$LOG_LABEL} failed to send payload: `, { error, payload });
+            });
+    }
+
+    if (interaction.commandName === 'remove-ch') {
+        const payload = {
+            discord_user_id: interaction.user.id,
+            server_id: interaction.guildId,
+            channel_id: interaction.channelId
         }
 
-        if (CMD_NAME === "remove-ch") {
-            const payload = {
-                discord_user_id: message.author.id,
-                server_id: message.guildId,
-                channel_id: message.channelId
-            }
-
-            return axios({
-                method: 'post',
-                url: 'http://localhost:3035/discord-server/remove-channel',
-                data: payload
+        return axios({
+            method: 'POST',
+            url: 'http://localhost:3035/discord-servers/remove-channel',
+            data: payload
+        })
+            .then(response => {
+                interaction.reply("Request sent, wait for response...");
+                return console.log(`${$LOG_LABEL} payload sent: `, { response });
             })
-                .then(response => {
-                    return console.log(`${$LOG_LABEL} payload sent: `, { response });
-                })
-                .catch(error => {
-                    message.channel.send("Couldn't remove channel.");
-                    return console.error(`${$LOG_LABEL} payload failed to send: `, { error });
-                });
-        }
+            .catch(error => {
+                interaction.reply("Couldn't remove channel.");
+                return console.error(`${$LOG_LABEL} payload failed to send: `, { error });
+            });
     }
 });
 
@@ -86,8 +105,8 @@ client.on('guildCreate', (guild) => {
             };
 
             return axios({
-                method: 'post',
-                url: 'http://localhost:3035/discord-server/register-server',
+                method: 'POST',
+                url: 'http://localhost:3035/discord-servers/register-server',
                 data: payload
             })
                 .then(response => {
@@ -109,8 +128,8 @@ client.on('guildDelete', (guild) => {
     };
 
     return axios({
-        method: 'post',
-        url: 'http://localhost:3035/discord-server/remove-server',
+        method: 'POST',
+        url: 'http://localhost:3035/discord-servers/remove-server',
         data: payload
     })
         .then(response => {

@@ -15,7 +15,6 @@ class PostJobsRepository {
                     console.error(`${$LOG_LABEL} post job failed: `, { error });
                     return reject(error);
                 } else {
-                    console.log(`${$LOG_LABEL} post job saved: `, { item });
                     return resolve(newJob);
                 }
             });

@@ -2,9 +2,8 @@ const getUtil = require('src/commons/getUtil');
 
 const GuildsRepository = require('../../repositories/guilds-repository');
 
-const FilterByOneField = require('./object-builders/filters/find-by-one-field');
-const FilterByTwoFields = require('./object-builders/filters/find-by-two-fields');
-const FindByManyFields = require('./object-builders/filters/find-by-many-fields');
+const FilterByOneField = require('../dtos/find-by-one-field');
+const FindByManyFields = require('../dtos/find-by-many-fields');
 
 const AddChannelToList = require('./object-builders/queries/add-channel-to-list');
 
@@ -21,7 +20,7 @@ class GuildsService {
                     if (response) {
                         return GuildsService.checkIfChannelExists([payload.discord_user_id, payload.channel_id])
                             .then(_response => {
-                                if (_response) {
+                                if (getUtil.isObjectWithKeys(_response.target_channels)) {
                                     console.error(`${$LOG_LABEL} configuration already exists: `, { payload });
                                     return reject('channel is already registered.');
                                 } else {
@@ -43,8 +42,15 @@ class GuildsService {
                     } else {
                         return GuildsRepository.saveGuild(payload)
                             .then(response => {
-                                console.log(`${$LOG_LABEL} guild configuration registered: `, { response });
-                                return resolve('Server and channel registered');
+                                return GuildsService.addChannelToList(payload)
+                                    .then(__response => {
+                                        console.log(`${$LOG_LABEL} channel added to list: `, { payload, response });
+                                        return resolve('channel registered.');
+                                    })
+                                    .catch(error => {
+                                        console.error(`${$LOG_LABEL} failed to add channel to list: `, { error });
+                                        return reject(error);
+                                    });
                             })
                             .catch(error => {
                                 console.error(`${$LOG_LABEL} guild configuration failed to register: `, { error });
@@ -96,7 +102,7 @@ class GuildsService {
 
     static getUsersTargetChannels(payload) {
         const $JOB_LABEL = 'getTargetChannels', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByTwoFields('user_id', 'server_id', payload);
+        const filter = new FindByManyFields([payload.user_id, payload.server_id]);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)

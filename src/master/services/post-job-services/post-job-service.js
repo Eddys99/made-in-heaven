@@ -47,13 +47,14 @@ class PostJobService {
         });
     }
 
-    static sendResponseToDiscordServer(message, server_id) {
+    static sendResponseToDiscordServer(msg_string, channel_id) {
         const $JOB_LABEL = 'makePost', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const message = { content: msg_string };
 
         return new Promise((resolve, reject) => {
-            return axios.post({
+            return axios({
                 method: 'POST',
-                url: `https://discord.com/api/v10/channels/${server_id}/messages`,
+                url: `https://discord.com/api/v10/channels/${channel_id}/messages`,
                 headers: { 'Authorization': `Bot ${$BOT_TOKEN}` },
                 data: message
             })
@@ -62,7 +63,7 @@ class PostJobService {
                     return resolve(response);
                 })
                 .catch(error => {
-                    console.error(`${$LOG_LABEL} failed to sent response message: `, { error });
+                    console.error(`${$LOG_LABEL} failed to send response message: `, { error });
                     return reject(error);
                 });
         });

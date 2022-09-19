@@ -47,7 +47,6 @@ class GuildsRepository {
                     console.error(`${$LOG_LABEL} failed to get guild: `, { error });
                     return reject(error);
                 } else {
-                    console.log(`${$LOG_LABEL} guild found: `, { response });
                     return resolve(response);
                 }
             });
@@ -63,7 +62,6 @@ class GuildsRepository {
                     console.error(`${$LOG_LABEL} failed to update guild configuration: `, { error });
                     return reject(error);
                 } else {
-                    console.log(`${$LOG_LABEL} guild configuration updated: `, { result });
                     return resolve(result);
                 }
             });
