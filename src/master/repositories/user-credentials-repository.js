@@ -59,7 +59,7 @@ async function updateTimestamps(filter) {
     try {
         const user = await UserModel.findOne(filter);
         user.updateExpiresAt();
-        user,save();
+        user.save();
     } catch (error) {
         console.log(`${$LOG_LABEL} failed to update timestamps: `, { error });
     }
