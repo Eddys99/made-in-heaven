@@ -35,6 +35,34 @@ class UserCredentialsRepository {
            });
         });
     }
+
+    static updateUser(filter, query) {
+        const $JOB_LABEL = 'updateUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+        return new Promise((resolve, reject) => {
+            UserModel.updateOne(filter, query, null, (error, response) => {
+                if (error) {
+                    console.error(`${$LOG_LABEL} failed to update user credentials: `, { error });
+                    return reject(error);
+                } else {
+                    updateTimestamps(filter);
+                    return resolve(response);
+                }
+            });
+        });
+    }
+}
+
+async function updateTimestamps(filter) {
+    const $JOB_LABEL = 'updateTimestamps', $LOG_LABEL = `[Handler][${$LABEL}][${$JOB_LABEL}]`;
+
+    try {
+        const user = await UserModel.findOne(filter);
+        user.updateExpiresAt();
+        user,save();
+    } catch (error) {
+        console.log(`${$LOG_LABEL} failed to update timestamps: `, { error });
+    }
 }
 
 module.exports = UserCredentialsRepository;

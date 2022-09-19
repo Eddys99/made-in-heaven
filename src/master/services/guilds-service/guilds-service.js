@@ -2,8 +2,8 @@ const getUtil = require('src/commons/getUtil');
 
 const GuildsRepository = require('../../repositories/guilds-repository');
 
-const FilterByOneField = require('../dtos/find-by-one-field');
-const FindByManyFields = require('../dtos/find-by-many-fields');
+const FilterByOneField = require('../common-object-builders/filters/find-by-one-field');
+const FindByManyFields = require('../common-object-builders/filters/find-by-many-fields');
 
 const AddChannelToList = require('./object-builders/queries/add-channel-to-list');
 

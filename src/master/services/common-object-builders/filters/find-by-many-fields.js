@@ -11,6 +11,8 @@ class FindByManyFields {
                 this[element] = data[index];
             });
         }
+
+        return this;
     }
 }
 
