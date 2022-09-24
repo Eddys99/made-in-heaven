@@ -94,7 +94,7 @@ client.on("interactionCreate", async interaction => {
 client.on('guildCreate', (guild) => {
     const $JOB_LABEL = 'guildCreate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
-    guild.fetchAuditLogs({type: "BOT_ADD", limit: 1})
+    guild.fetchAuditLogs()
         .then(log => {
             const payload = {
                 discord_user_id: log.entries.first().executor.id,
@@ -103,17 +103,16 @@ client.on('guildCreate', (guild) => {
                 server_icon: guild.iconURL(),
                 owner_id: guild.ownerId
             };
-
+            console.log(`${$LOG_LABEL} payload: `, { payload });
             return axios({
                 method: 'POST',
-                url: 'http://localhost:3035/discord-servers/register-server',
+                url: 'http://localhost:3035/discord-servers/add-server',
                 data: payload
             })
                 .then(response => {
                     return console.log(`${$LOG_LABEL} payload sent: `, { response });
                 })
                 .catch(error => {
-                    message.channel.send("Couldn't register server.");
                     return console.error(`${$LOG_LABEL} payload failed to send: `, { error });
                 });
         });
@@ -126,7 +125,7 @@ client.on('guildDelete', (guild) => {
         server_id: guild.id,
         owner_id: guild.ownerId
     };
-
+    console.log(`${$LOG_LABEL} payload: `, { payload });
     return axios({
         method: 'POST',
         url: 'http://localhost:3035/discord-servers/remove-server',
@@ -136,7 +135,6 @@ client.on('guildDelete', (guild) => {
             return console.log(`${$LOG_LABEL} payload sent: `, { response });
         })
         .catch(error => {
-            message.channel.send("Couldn't remove server.");
             return console.error(`${$LOG_LABEL} payload failed to send: `, { error });
         });
 });
