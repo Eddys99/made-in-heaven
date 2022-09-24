@@ -208,6 +208,23 @@ class GuildsService {
                 });
         });
     }
+
+    static removeGuildFromAll(payload) {
+        const $JOB_LABEL = 'removeGuildFromAll', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FindByManyFields(payload);
+
+        return new Promise((resolve, reject) => {
+            return GuildsRepository.removeMany(filter)
+                .then(response => {
+                    console.log(`${$LOG_LABEL} guilds removed: `, { response });
+                    return resolve(response);
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} failed to remove guilds: `, { error });
+                    return reject(error);
+                });
+        });
+    }
 }
 
 module.exports = GuildsService;

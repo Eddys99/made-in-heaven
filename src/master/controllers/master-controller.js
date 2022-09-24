@@ -108,6 +108,17 @@ class MasterController {
 
     static removeServer(request, response) {
         const $JOB_LABEL = 'removeServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new RemoveConfigurationDTO(request.body);
+
+        return GuildsService.removeGuildFromAll(payload)
+            .then(_response => {
+                console.log(`${$LOG_LABEL} server removed from all users list: `, { _response });
+                return response.status(200).json(new ResponseDTO());
+            })
+            .catch(error => {
+                console.error(`${$LOG_LABEL} failed to remove server from all users list: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
+            })
     }
 }
 
