@@ -5,8 +5,8 @@ class PostJob {
         if (data.message) {
             this.content = data.message;
         }
-        if (data.embeds) {
-            this.embeds = data.embeds;
+        if (data.assets) {
+            this.embeds = data.assets;
         }
 
         if (data.request_id) {
