@@ -53,10 +53,10 @@ const UserCredentials = new Schema({
    collection: 'user-credentials'
 });
 
-UserCredentials.methods.updateExpiresAt = function(property) {
+UserCredentials.methods.updateExpiresAt = function() {
     const value = new Date(Date.now());
     value.setDate(value.getDate() + 7);
-    this[property] = new setDate(value);
+    this['expires_at'] = new setDate(value);
 }
 
 UserCredentials.methods.setDateProperty = function(property, value) {
@@ -66,7 +66,7 @@ UserCredentials.methods.setDateProperty = function(property, value) {
 UserCredentials.pre('save', function(next) {
     if (this.isNew) {
         this.setDateProperty('created_at');
-        this.updateExpiresAt('expires_at');
+        this.setDateProperty('expires_at');
     }
     next();
 });

@@ -120,7 +120,7 @@ class DiscordService {
         return new Promise((resolve, reject) => {
             return axios.get('https://discord.com/api/v10/users/@me', headers)
                 .then(response => {
-                    console.log(`${$LOG_LABEL} user logged out: `, { response });
+                    console.log(`${$LOG_LABEL} user found `, { response });
                     return resolve(response.data);
                 }).catch(error => {
                     console.error(`${$LOG_LABEL} Can't find user: `, { error });
