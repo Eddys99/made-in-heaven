@@ -133,8 +133,8 @@ class DiscordService {
         const $JOB_LABEL = 'sendMessageToDiscord', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const message_object = new MessageDTO(payload);
 
-        target_channels.forEach((channel_id) => {
-            const axios_config = new SendMessageAxiosConfig(channel_id, message_object);
+        target_channels.forEach((element) => {
+            const axios_config = new SendMessageAxiosConfig(element.channel_id, message_object);
             axios(axios_config)
                 .then(response => {
                     console.log(`${$LOG_LABEL} Message sent to Discord channel: `, { response });
