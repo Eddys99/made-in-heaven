@@ -6,6 +6,7 @@ const FilterByOneField = require('../common-object-builders/filters/find-by-one-
 const FindByManyFields = require('../common-object-builders/filters/find-by-many-fields');
 
 const AddChannelToList = require('./object-builders/queries/add-channel-to-list');
+const RemoveTargetChannel = require('./object-builders/queries/remove-target-channel');
 
 const $LABEL = 'GuildsService';
 
@@ -158,6 +159,24 @@ class GuildsService {
                     console.error(`${$LOG_LABEL} failed to get user channel: `, { error });
                     return reject(error);
                 });
+        });
+    }
+
+    static removeTargetChannel(payload) {
+        const $JOB_LABEL = 'removeConfiguration', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FindByManyFields([payload.discord_user_id, payload.channel_id]);
+        const query = new RemoveTargetChannel(payload.channel_id);
+
+        return new Promise((resolve, reject) => {
+           return GuildsRepository.updateGuild(filter, query)
+               .then(response => {
+                   console.log(`${$LOG_LABEL} target channel removed: `, { response });
+                   return resolve(response);
+               })
+               .catch(error => {
+                   console.error(`${$LOG_LABEL} failed to remove target channel: `, { error });
+                   return reject(error);
+               });
         });
     }
 }

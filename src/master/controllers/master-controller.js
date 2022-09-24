@@ -8,7 +8,7 @@ const GuildsService = require('../services/guilds-service/guilds-service');
 const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 const GuildConfigurationDTO = require('../dtos/guild-configuration-dto');
-const {response} = require("express");
+const RemoveConfigurationDTO = require('../dtos/remove-configuration-dto');
 
 const $LABEL = 'MasterController'
 
@@ -51,7 +51,7 @@ class MasterController {
             });
     }
 
-    async static addChannelOrServer(request, response) {
+     static async addChannelOrServer(request, response) {
         const $JOB_LABEL = 'addChannelOrServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const user_id = await getUserId(request.body.discord_user_id);
         const payload = new GuildConfigurationDTO(request.body, user_id);
@@ -76,7 +76,17 @@ class MasterController {
 
     static removeChannel(request, response) {
         const $JOB_LABEL = 'removeChannel', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new RemoveConfigurationDTO(request.body);
 
+        return GuildsService.removeTargetChannel(payload)
+            .then(_response => {
+                console.log(`${$LOG_LABEL} target channel removed: `, { _response });
+                return response.status(200).json(new ResponseDTO());
+            })
+            .catch(error => {
+                console.error(`${$LOG_LABEL} target channel removed: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
+            });
     }
 
     static registerServer(request, response) {
