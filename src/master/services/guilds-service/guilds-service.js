@@ -21,9 +21,9 @@ class GuildsService {
                     if (response) {
                         return GuildsService.checkIfChannelExists([payload.discord_user_id, payload.channel_id])
                             .then(_response => {
-                                if (getUtil.isObjectWithKeys(_response.target_channels)) {
+                                if (_response) {
                                     console.error(`${$LOG_LABEL} configuration already exists: `, { payload });
-                                    return reject('channel is already registered.');
+                                    return resolve('channel is already registered.');
                                 } else {
                                     return GuildsService.addChannelToList(payload)
                                         .then(__response => {
@@ -143,17 +143,18 @@ class GuildsService {
     static checkIfChannelExists(payload) {
         const $JOB_LABEL = 'checkIfChannelExists', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const filter = new FilterByManyFields(payload);
+        const channel_id = payload[1];
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
                 .then(response => {
-                    if (!getUtil.isObjectWithKeys(response)) {
-                        console.log(`${$LOG_LABEL} channel doesn't exists: `, { response });
-                        return resolve(0);
-                    } else {
-                        console.log(`${$LOG_LABEL} channel exists: `, { response });
-                        return resolve(1);
-                    }
+
+                    response.target_channels.forEach((element) => {
+                        if (element.channel_id === channel_id) {
+                            return resolve(1);
+                        }
+                    })
+                    return resolve(0);
                 })
                 .catch(error => {
                     console.error(`${$LOG_LABEL} failed to get user channel: `, { error });
