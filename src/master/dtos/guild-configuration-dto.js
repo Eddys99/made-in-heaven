@@ -9,7 +9,7 @@ class GuildConfigurationDTO {
         this.server_icon = data.server_icon;
         this.owner_id = data.owner_id;
 
-        if (getUtil.isObjectWithKeys(data.channel_id) && getUtil.isObjectWithKeys(data.channel_name)) {
+        if (getUtil.isNotEmptyString(data.channel_id) && getUtil.isNotEmptyString(data.channel_name)) {
             this.channel_id = data.channel_id;
             this.channel_name = data.channel_name;
         }
