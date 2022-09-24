@@ -2,8 +2,8 @@ const getUtil = require('src/commons/getUtil');
 
 const GuildsRepository = require('../../repositories/guilds-repository');
 
-const FilterByOneField = require('../common-object-builders/filters/find-by-one-field');
-const FindByManyFields = require('../common-object-builders/filters/find-by-many-fields');
+const FilterByOneField = require('../common-object-builders/filters/filter-by-one-field');
+const FilterByManyFields = require('../common-object-builders/filters/filter-by-many-fields');
 
 const AddChannelToList = require('./object-builders/queries/add-channel-to-list');
 const RemoveTargetChannel = require('./object-builders/queries/remove-target-channel');
@@ -68,7 +68,7 @@ class GuildsService {
 
     static addChannelToList(payload) {
         const $JOB_LABEL = 'addChannelToList', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.discord_user_id, payload.server_id]);
+        const filter = new FilterByManyFields([payload.discord_user_id, payload.server_id]);
         const query = new AddChannelToList(payload);
 
         return new Promise((resolve, reject) => {
@@ -103,7 +103,7 @@ class GuildsService {
 
     static getUsersTargetChannels(payload) {
         const $JOB_LABEL = 'getTargetChannels', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.user_id, payload.server_id]);
+        const filter = new FilterByManyFields([payload.user_id, payload.server_id]);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
@@ -120,7 +120,7 @@ class GuildsService {
 
     static checkIfConfigurationExists(payload) {
         const $JOB_LABEL = 'checkIfConfigurationExists', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields(payload);
+        const filter = new FilterByManyFields(payload);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
@@ -142,7 +142,7 @@ class GuildsService {
 
     static checkIfChannelExists(payload) {
         const $JOB_LABEL = 'checkIfChannelExists', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields(payload);
+        const filter = new FilterByManyFields(payload);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
@@ -164,7 +164,7 @@ class GuildsService {
 
     static removeTargetChannel(payload) {
         const $JOB_LABEL = 'removeConfiguration', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.discord_user_id, payload.channel_id]);
+        const filter = new FilterByManyFields([payload.discord_user_id, payload.channel_id]);
         const query = new RemoveTargetChannel(payload.channel_id);
 
         return new Promise((resolve, reject) => {
@@ -182,7 +182,7 @@ class GuildsService {
 
     static registerNewServer(payload) {
         const $JOB_LABEL = 'registerNewServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.discord_user_id, payload.server_id]);
+        const filter = new FilterByManyFields([payload.discord_user_id, payload.server_id]);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
@@ -211,7 +211,7 @@ class GuildsService {
 
     static removeGuildFromAll(payload) {
         const $JOB_LABEL = 'removeGuildFromAll', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields(payload);
+        const filter = new FilterByOneField(payload.server_id);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.removeMany(filter)

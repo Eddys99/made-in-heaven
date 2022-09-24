@@ -2,8 +2,8 @@ const getUtil = require('src/commons/getUtil');
 
 const UserRepository = require('../../repositories/user-credentials-repository');
 
-const FindByOneField = require('../common-object-builders/filters/find-by-one-field');
-const FindByManyFields = require('../common-object-builders/filters/find-by-many-fields');
+const FilterByOneField = require('../common-object-builders/filters/filter-by-one-field');
+const FilterByManyFields = require('../common-object-builders/filters/filter-by-many-fields');
 
 const UpdateUserCredentials = require('./object-builders/query/update-user-credentials');
 
@@ -48,7 +48,7 @@ class UserServices {
 
     static checkIfUserExists(payload) {
         const $JOB_LABEL = 'checkIfUserExists', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.user_id, payload.discord_user_id]);
+        const filter = new FilterByManyFields([payload.user_id, payload.discord_user_id]);
 
         return new Promise((resolve, reject) => {
             return UserRepository.getUser(filter)
@@ -68,7 +68,7 @@ class UserServices {
 
     static updateUserCredentials(payload) {
         const $JOB_LABEL = 'updateUserCredentials', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByManyFields([payload.user_id, payload.discord_user_id]);
+        const filter = new FilterByManyFields([payload.user_id, payload.discord_user_id]);
         const query = new UpdateUserCredentials(payload);
 
         return new Promise((resolve, reject) => {
@@ -86,7 +86,7 @@ class UserServices {
 
     static getOneUserByField(field) {
         const $JOB_LABEL = 'getOneUserByField', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FindByOneField(field);
+        const filter = new FilterByOneField(field);
 
         return new Promise((resolve, reject) => {
             return UserRepository.getUser(filter)

@@ -1,6 +1,6 @@
 const getUtil = require('src/commons/getUtil');
 
-class FindByManyFields {
+class FilterByManyFields {
     constructor(data) {
         if (getUtil.isObjectWithKeys(data)) {
             for (const property in data) {
@@ -16,4 +16,4 @@ class FindByManyFields {
     }
 }
 
-module.exports = FindByManyFields;
+module.exports = FilterByManyFields;

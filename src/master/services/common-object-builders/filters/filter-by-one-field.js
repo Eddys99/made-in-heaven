@@ -1,4 +1,4 @@
-class FindByOneField {
+class FilterByOneField {
     constructor(field, value) {
         this[field] = value;
 
@@ -6,4 +6,4 @@ class FindByOneField {
     }
 }
 
-module.exports = FindByOneField;
+module.exports = FilterByOneField;
