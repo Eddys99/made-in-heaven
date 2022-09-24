@@ -8,6 +8,7 @@ const GuildsService = require('../services/guilds-service/guilds-service');
 const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 const GuildConfigurationDTO = require('../dtos/guild-configuration-dto');
+const {response} = require("express");
 
 const $LABEL = 'MasterController'
 
@@ -50,9 +51,10 @@ class MasterController {
             });
     }
 
-    static addChannelOrServer(request, response) {
+    async static addChannelOrServer(request, response) {
         const $JOB_LABEL = 'addChannelOrServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const payload = new GuildConfigurationDTO(request.body);
+        const user_id = await getUserId(request.body.discord_user_id);
+        const payload = new GuildConfigurationDTO(request.body, user_id);
 
         return GuildsService.saveGuildConfiguration(payload)
             .then(_response => {
@@ -84,6 +86,20 @@ class MasterController {
     static removeServer(request, response) {
         const $JOB_LABEL = 'removeServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
     }
+}
+
+async function getUserId(discord_user_id) {
+    const $JOB_LABEL = 'getUserId', $LOG_LABEL = `[${$LABEL}][handler][${$JOB_LABEL}]`;
+
+    return UserService.getOneUserByField(discord_user_id)
+        .then(response => {
+            console.log(`${$LOG_LABEL} user_id found: `, response.user_id);
+            return response.user_id;
+        })
+        .catch(error => {
+            console.log(`${$LOG_LABEL} failed to get user_id: `, { error });
+            return error;
+        });
 }
 
 module.exports = MasterController;

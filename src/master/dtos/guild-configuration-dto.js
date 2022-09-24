@@ -1,5 +1,6 @@
 class GuildConfigurationDTO {
-    constructor(data) {
+    constructor(data, user_id) {
+        this.user_id = user_id;
         this.discord_user_id = data.discord_user_id;
         this.server_id = data.server_id;
         this.server_name = data.server_name;
