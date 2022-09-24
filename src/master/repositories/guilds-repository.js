@@ -68,6 +68,21 @@ class GuildsRepository {
         });
     }
 
+    static updateManyGuilds(filter, query) {
+        const $JOB_LABEL = 'updateManyGuilds', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+
+        return new Promise((resolve, reject) => {
+            return GuildModel.updateMany(filter, query, null, (error, result) => {
+                if (error) {
+                    console.error(`${$LOG_LABEL} failed to update guild configuration: `, { error });
+                    return reject(error);
+                } else {
+                    return resolve(result);
+                }
+            });
+        });
+    }
+
     static removeMany(filter) {
         const $JOB_LABEL = 'removeMany', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
