@@ -14,7 +14,7 @@ class ValidatorMiddleware {
         const $JOB_LABEL = 'registerUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new UserCredentialsDTO(request.body);
         const string_fields = [
-            'user_uid',
+            'user_id',
             'access_token',
             'token_type',
             'refresh_token',
@@ -40,7 +40,7 @@ class ValidatorMiddleware {
         const $JOB_LABEL = 'postJob', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new PostJobDTO(request.body);
         const string_fields = [
-            'user_uid'
+            'user_id'
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
