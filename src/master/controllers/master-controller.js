@@ -66,7 +66,7 @@ class MasterController {
                     .catch(error => {
                         console.error(`${$LOG_LABEL} failed to send response message: `, { error });
                         return response.status(400).json(new ErrorDTO(error));
-                    })
+                    });
             })
             .catch(error => {
                 console.error(`${$LOG_LABEL} channel/guild configuration failed to save: `, { error });
@@ -77,11 +77,19 @@ class MasterController {
     static removeChannel(request, response) {
         const $JOB_LABEL = 'removeChannel', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new RemoveConfigurationDTO(request.body);
+        const response_msg_string = 'channel removed';
 
         return GuildsService.removeTargetChannel(payload)
             .then(_response => {
-                console.log(`${$LOG_LABEL} target channel removed: `, { _response });
-                return response.status(200).json(new ResponseDTO());
+                return PostJobService.sendResponseToDiscordServer(response_msg_string, payload.channel_id)
+                    .then(__response => {
+                        console.log(`${$LOG_LABEL} channel/guild configuration removed: `, { __response });
+                        return response.status(200).json(new ResponseDTO());
+                    })
+                    .catch(error => {
+                        console.error(`${$LOG_LABEL} failed to send response message: `, { error });
+                        return response.status(400).json(new ErrorDTO(error));
+                    });
             })
             .catch(error => {
                 console.error(`${$LOG_LABEL} target channel removed: `, { error });
