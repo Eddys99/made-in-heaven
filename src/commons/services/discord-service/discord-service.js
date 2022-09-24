@@ -140,7 +140,7 @@ class DiscordService {
                     console.log(`${$LOG_LABEL} Message sent to Discord channel: `, { response });
                 })
                 .catch(error => {
-                    console.error(`${$LOG_LABEL} Couldn't sent message to Discord channel: `, { error });
+                    console.error(`${$LOG_LABEL} Couldn't send message to Discord channel: `, { error });
                 });
         });
     }
