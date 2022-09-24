@@ -89,8 +89,21 @@ class MasterController {
             });
     }
 
-    static registerServer(request, response) {
+    static async registerServer(request, response) {
         const $JOB_LABEL = 'registerServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const user_id = await getUserId(request.body.discord_user_id);
+        const payload = new GuildConfigurationDTO(request.body, user_id);
+        console.log(`${$LOG_LABEL} bot joined server with id: `, payload.server_id);
+
+        return GuildsService.registerNewServer(payload)
+            .then(_response => {
+                console.log(`${$LOG_LABEL} server registered: `, { _response });
+                return response.status(200).json(new ResponseDTO());
+            })
+            .catch(error => {
+                console.error(`${$LOG_LABEL} failed to register server: `, { error });
+                return response.status(400).json(new ErrorDTO(error));
+            });
     }
 
     static removeServer(request, response) {

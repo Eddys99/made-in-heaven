@@ -179,6 +179,35 @@ class GuildsService {
                });
         });
     }
+
+    static registerNewServer(payload) {
+        const $JOB_LABEL = 'registerNewServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FindByManyFields([payload.discord_user_id, payload.server_id]);
+
+        return new Promise((resolve, reject) => {
+            return GuildsRepository.getOneGuild(filter)
+                .then(response => {
+                    if (getUtil.isObjectWithKeys(response)) {
+                        console.error(`${$LOG_LABEL} server already registered: `, { payload });
+                        return reject('server already registered');
+                    } else {
+                        return GuildsRepository.saveGuild(payload)
+                            .then(_response => {
+                                console.log(`${$LOG_LABEL} server registered: `, { _response });
+                                return resolve(_response);
+                            })
+                            .catch(error => {
+                                console.error(`${$LOG_LABEL} failed to register server: `, { error });
+                                return reject(error);
+                            })
+                    }
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} failed to search guild: `, { error });
+                    return reject(error);
+                });
+        });
+    }
 }
 
 module.exports = GuildsService;
