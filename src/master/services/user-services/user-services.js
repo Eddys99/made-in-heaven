@@ -2,6 +2,7 @@ const getUtil = require('src/commons/getUtil');
 
 const UserRepository = require('../../repositories/user-credentials-repository');
 
+const FindByOneField = require('../common-object-builders/filters/find-by-one-field');
 const FindByManyFields = require('../common-object-builders/filters/find-by-many-fields');
 
 const UpdateUserCredentials = require('./object-builders/query/update-user-credentials');
@@ -80,6 +81,23 @@ class UserServices {
                     console.error(`${$LOG_LABEL} failed to update user credentials: `, { error })
                     return reject(error);
                 });
+        });
+    }
+
+    static getOneUserByField(field) {
+        const $JOB_LABEL = 'getOneUserByField', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FindByOneField(field);
+
+        return new Promise((resolve, reject) => {
+            return UserRepository.getUser(filter)
+                .then(response => {
+                    console.log(`${$LOG_LABEL} user found: `, { response });
+                    return resolve(response);
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} failed to get user: `, { error })
+                    return reject(error);
+                })
         });
     }
 }
