@@ -51,8 +51,8 @@ class MasterController {
             });
     }
 
-     static async addChannelOrServer(request, response) {
-        const $JOB_LABEL = 'addChannelOrServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+     static async addChannel(request, response) {
+        const $JOB_LABEL = 'addChannel', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const user_id = await getUserId(request.body.discord_user_id);
         const payload = new GuildConfigurationDTO(request.body, user_id);
 

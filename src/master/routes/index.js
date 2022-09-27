@@ -1,4 +1,5 @@
 const MasterController = require('../controllers/master-controller');
+const ValidatorMiddleware = require('../middlewares/validator-middleware');
 
 class Router {
     constructor(express) {
@@ -6,22 +7,40 @@ class Router {
         const app = express();
 
         router.route('/register-user')
-            .post(MasterController.registerUser);
+            .post(
+                ValidatorMiddleware.registerUser,
+                MasterController.registerUser
+            );
 
         router.route('/post-message')
-            .post(MasterController.postJob);
+            .post(
+                ValidatorMiddleware.postJob,
+                MasterController.postJob
+            );
 
         router.route('/discord-servers/add-channel')
-            .post(MasterController.addChannelOrServer);
+            .post(
+                ValidatorMiddleware.addChannel,
+                MasterController.addChannel
+            );
 
         router.route('/discord-servers/remove-channel')
-            .post(MasterController.removeChannel);
+            .post(
+                ValidatorMiddleware.removeChannel,
+                MasterController.removeChannel
+            );
 
         router.route('/discord-servers/add-server')
-            .post(MasterController.registerServer);
+            .post(
+                ValidatorMiddleware.registerServer,
+                MasterController.registerServer
+            );
 
         router.route('/discord-servers/remove-server')
-            .post(MasterController.removeServer);
+            .post(
+                ValidatorMiddleware.removeServer,
+                MasterController.removeServer
+            );
 
         app.use('/', router);
 

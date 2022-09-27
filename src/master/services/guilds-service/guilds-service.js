@@ -8,22 +8,27 @@ const FilterByManyFields = require('../common-object-builders/filters/filter-by-
 const AddChannelToList = require('./object-builders/queries/add-channel-to-list');
 const RemoveTargetChannel = require('./object-builders/queries/remove-target-channel');
 
+const CheckIfConfigurationExistsDTO = require('./dtos/check-if-configuration-exists-dto');
+const CheckIfChannelExistsDTO = require('./dtos/check-if-channel-exists-dto');
+
 const $LABEL = 'GuildsService';
 
 class GuildsService {
 
     static saveGuildConfiguration(payload) {
         const $JOB_LABEL = 'saveGuildConfiguration', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const checkIfConfigurationExistsDTO = new CheckIfConfigurationExistsDTO(payload.discord_user_id, payload.server_id);
+        const checkIfChannelExistsDTO = new CheckIfChannelExistsDTO(payload.discord_user_id, payload.channel_id);
 
         return new Promise((resolve, reject) => {
-            return GuildsService.checkIfConfigurationExists([payload.discord_user_id, payload.server_id])
+            return GuildsService.checkIfConfigurationExists(checkIfConfigurationExistsDTO)
                 .then(response => {
                     if (response) {
-                        return GuildsService.checkIfChannelExists([payload.discord_user_id, payload.channel_id])
+                        return GuildsService.checkIfChannelExists(checkIfChannelExistsDTO)
                             .then(_response => {
-                                if (getUtil.isObjectWithKeys(_response.target_channels)) {
+                                if (_response) {
                                     console.error(`${$LOG_LABEL} configuration already exists: `, { payload });
-                                    return reject('channel is already registered.');
+                                    return resolve('channel is already registered.');
                                 } else {
                                     return GuildsService.addChannelToList(payload)
                                         .then(__response => {
@@ -68,7 +73,7 @@ class GuildsService {
 
     static addChannelToList(payload) {
         const $JOB_LABEL = 'addChannelToList', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByManyFields([payload.discord_user_id, payload.server_id]);
+        const filter = new FilterByManyFields({ discord_user_id: payload.discord_user_id, server_id: payload.server_id });
         const query = new AddChannelToList(payload);
 
         return new Promise((resolve, reject) => {
@@ -103,7 +108,7 @@ class GuildsService {
 
     static getUsersTargetChannels(payload) {
         const $JOB_LABEL = 'getTargetChannels', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByManyFields([payload.user_id, payload.server_id]);
+        const filter = new FilterByManyFields({ discord_user_id: payload.discord_user_id, server_id: payload.server_id });
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
@@ -143,17 +148,18 @@ class GuildsService {
     static checkIfChannelExists(payload) {
         const $JOB_LABEL = 'checkIfChannelExists', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const filter = new FilterByManyFields(payload);
+        const channel_id = payload.channel_id;
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
                 .then(response => {
-                    if (!getUtil.isObjectWithKeys(response)) {
-                        console.log(`${$LOG_LABEL} channel doesn't exists: `, { response });
-                        return resolve(0);
-                    } else {
-                        console.log(`${$LOG_LABEL} channel exists: `, { response });
-                        return resolve(1);
-                    }
+
+                    response.target_channels.forEach((element) => {
+                        if (element.channel_id === channel_id) {
+                            return resolve(1);
+                        }
+                    })
+                    return resolve(0);
                 })
                 .catch(error => {
                     console.error(`${$LOG_LABEL} failed to get user channel: `, { error });
@@ -164,11 +170,11 @@ class GuildsService {
 
     static removeTargetChannel(payload) {
         const $JOB_LABEL = 'removeConfiguration', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByManyFields([payload.discord_user_id, payload.channel_id]);
+        const filter = new FilterByManyFields({ discord_user_id: payload.discord_user_id, server_id: payload.server_id });
         const query = new RemoveTargetChannel(payload.channel_id);
 
         return new Promise((resolve, reject) => {
-           return GuildsRepository.updateGuild(filter, query)
+           return GuildsRepository.updateManyGuilds(filter, query)
                .then(response => {
                    console.log(`${$LOG_LABEL} target channel removed: `, { response });
                    return resolve(response);
@@ -182,7 +188,7 @@ class GuildsService {
 
     static registerNewServer(payload) {
         const $JOB_LABEL = 'registerNewServer', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByManyFields([payload.discord_user_id, payload.server_id]);
+        const filter = new FilterByManyFields({ discord_user_id: payload.discord_user_id, server_id: payload.server_id });
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
