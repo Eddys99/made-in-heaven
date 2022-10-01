@@ -45,7 +45,7 @@ class Router {
 
         router.route('/user/register')
             .post(
-                ValidatorMiddleware.userAccount,
+                ValidatorMiddleware.userAccountRegister,
                 UserController.register
             );
 

@@ -129,8 +129,8 @@ class ValidatorMiddleware {
         return next();
     }
 
-    static userAccount(request, response, next) {
-        const $JOB_LABEL = 'userAccount', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+    static userAccountRegister(request, response, next) {
+        const $JOB_LABEL = 'userAccountRegister', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new UserAccountDTO(request.body);
         const string_fields = [
             'username',
