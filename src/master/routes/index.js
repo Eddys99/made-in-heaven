@@ -1,5 +1,6 @@
 const MasterController = require('../controllers/master-controller');
 const ValidatorMiddleware = require('../middlewares/validator-middleware');
+const UserController = require('../controllers/user-controller');
 
 class Router {
     constructor(express) {
@@ -40,6 +41,16 @@ class Router {
             .post(
                 ValidatorMiddleware.removeServer,
                 MasterController.removeServer
+            );
+
+        router.route('/user/register')
+            .post(
+                UserController.register
+            );
+
+        router.route('/user/authenticate')
+            .post(
+                UserController.authenticate
             );
 
         app.use('/', router);
