@@ -1,7 +1,10 @@
+const getUtil = require('src/commons/getUtil');
+
 const UserAccountService = require('../services/user-account-service/user-account-service');
 
-const getUtil = require('src/commons/getUtil');
+
 const CreateAccountDTO = require('../dtos/create-account-dto');
+const UserAuthenticationDTO = require('../dtos/user-authentication-dto');
 
 const $LABEL = 'UserController';
 
@@ -28,6 +31,7 @@ class UserController {
 
     static authenticate(request, response) {
         const $JOB_LABEL = 'authenticate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserAuthenticationDTO(request.body);
 
     }
 }
