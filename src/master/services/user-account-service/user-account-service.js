@@ -2,21 +2,25 @@ const UserAccountRepository = require('../../repositories/user-account-repositor
 
 const getUtil = require('src/commons/getUtil');
 
+const FilterByOne = require('../common-object-builders/filters/filter-by-one-field');
+
 const $LABEL = 'UserAccountService';
 
 class UserAccountService {
 
     static registerUserAccount(payload) {
         const $JOB_LABEL = 'registerUserAccount', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FilterByOne('username', payload.username);
 
         return new Promise((resolve, reject) => {
-            return UserAccountRepository.getUser(payload.username)
+            return UserAccountRepository.getUser(filter)
                 .then(response => {
                     if (getUtil.isObjectWithKeys(response)) {
                         console.log(`${$LOG_LABEL} username is already used: `, payload.username)
                         return reject('Username is already used.');
                     } else {
-                        return UserAccountRepository.getUser(payload.email)
+                        const _filter = new FilterByOne('email', payload.email);
+                        return UserAccountRepository.getUser(_filter)
                             .then(_response => {
                                 if (getUtil.isObjectWithKeys(_response)) {
                                     console.log(`${$LOG_LABEL} email is already used: `, payload.username)
@@ -44,6 +48,10 @@ class UserAccountService {
                     return reject(error);
                 });
         });
+    }
+
+    static authentication(payload) {
+        const $JOB_LABEL = 'authentication', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
     }
 }
 
