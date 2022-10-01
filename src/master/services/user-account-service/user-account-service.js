@@ -7,7 +7,7 @@ const $LABEL = 'UserAccountService';
 class UserAccountService {
 
     static registerUserAccount(payload) {
-        const $JOB_LABEL = 'registerUserAccount', $LOG_LABEL = `[${$LABEL}][handler][${$JOB_LABEL}]`;
+        const $JOB_LABEL = 'registerUserAccount', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
         return new Promise((resolve, reject) => {
             return UserAccountRepository.getUser(payload.username)

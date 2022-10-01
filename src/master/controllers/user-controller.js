@@ -8,7 +8,7 @@ const $LABEL = 'UserController';
 class UserController {
 
     static register(request, response) {
-        const $JOB_LABEL = 'register', $LOG_LABEL = `[${$LABEL}][handler][${$JOB_LABEL}]`;
+        const $JOB_LABEL = 'register', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new CreateAccountDTO(request.body);
 
         return UserAccountService.registerUserAccount(payload)
@@ -27,7 +27,7 @@ class UserController {
     }
 
     static authenticate(request, response) {
-        const $JOB_LABEL = 'authenticate', $LOG_LABEL = `[${$LABEL}][handler][${$JOB_LABEL}]`;
+        const $JOB_LABEL = 'authenticate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
     }
 }

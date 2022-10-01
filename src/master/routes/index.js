@@ -45,11 +45,13 @@ class Router {
 
         router.route('/user/register')
             .post(
+                ValidatorMiddleware.userAccount,
                 UserController.register
             );
 
         router.route('/user/authenticate')
             .post(
+                ValidatorMiddleware.userAuthentication,
                 UserController.authenticate
             );
 

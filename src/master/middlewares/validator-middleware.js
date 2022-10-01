@@ -5,6 +5,8 @@ const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 const GuildConfigurationDTO = require('../dtos/guild-configuration-dto');
 const RemoveConfigurationDTO = require('../dtos/remove-configuration-dto');
+const UserAccountDTO = require('../dtos/create-account-dto');
+const UserAuthenticationDTO = require('../dtos/user-authentication-dto');
 
 const $LABEL = 'ValidatorMiddleware';
 
@@ -116,6 +118,42 @@ class ValidatorMiddleware {
         const payload = new RemoveConfigurationDTO(request.body);
         const string_fields = [
             'server_id'
+        ];
+        const errors = checkIfValuesAreMissing(string_fields, payload);
+
+        if (errors.length > 0) {
+            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
+            return response.json(new ErrorDTO(errors));
+        }
+
+        return next();
+    }
+
+    static userAccount(request, response, next) {
+        const $JOB_LABEL = 'userAccount', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserAccountDTO(request.body);
+        const string_fields = [
+            'username',
+            'email',
+            'password',
+            'password2'
+        ];
+        const errors = checkIfValuesAreMissing(string_fields, payload);
+
+        if (errors.length > 0) {
+            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
+            return response.json(new ErrorDTO(errors));
+        }
+
+        return next();
+    }
+
+    static userAuthentication(request, response, next) {
+        const $JOB_LABEL = 'userAuthentication', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserAuthenticationDTO(request.body);
+        const string_fields = [
+            'username',
+            'password'
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
