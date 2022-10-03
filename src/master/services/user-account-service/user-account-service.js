@@ -3,6 +3,7 @@ const UserAccountRepository = require('../../repositories/user-account-repositor
 const getUtil = require('src/commons/getUtil');
 
 const FilterByOne = require('../common-object-builders/filters/filter-by-one-field');
+const FilterByMany = require('../common-object-builders/filters/filter-by-many-fields');
 
 const $LABEL = 'UserAccountService';
 
@@ -52,6 +53,11 @@ class UserAccountService {
 
     static authentication(payload) {
         const $JOB_LABEL = 'authentication', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FilterByOne('username', payload.username);
+
+        return new Promise((resolve, reject) => {
+
+        });
     }
 }
 

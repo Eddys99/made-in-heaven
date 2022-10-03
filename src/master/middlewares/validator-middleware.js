@@ -131,7 +131,7 @@ class ValidatorMiddleware {
 
     static userAccountRegister(request, response, next) {
         const $JOB_LABEL = 'userAccountRegister', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const payload = new UserAccountDTO(request.body);
+        const payload = new UserAccountDTO(request.body, true);
         const string_fields = [
             'username',
             'email',
@@ -143,6 +143,8 @@ class ValidatorMiddleware {
         if (errors.length > 0) {
             console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
             return response.json(new ErrorDTO(errors));
+        } else if (payload.password !== payload.password2) {
+            return response.json(new ErrorDTO("Passwords don't match."));
         }
 
         return next();

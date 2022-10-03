@@ -12,7 +12,8 @@ class UserController {
 
     static register(request, response) {
         const $JOB_LABEL = 'register', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const payload = new CreateAccountDTO(request.body);
+        let payload = new CreateAccountDTO(request.body);
+        payload.encryptPassword(request.body);
 
         return UserAccountService.registerUserAccount(payload)
             .then(_response => {
@@ -33,6 +34,15 @@ class UserController {
         const $JOB_LABEL = 'authenticate', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
         const payload = new UserAuthenticationDTO(request.body);
 
+        return UserAccountService.authentication(payload)
+            .then(_response => {
+                console.log(`${$LOG_LABEL} user authenticated.`);
+                return response.status(200).json({ msg: 'Authenticated successfully' });
+            })
+            .catch(error => {
+                console.error(`${$LOG_LABEL} authentication failed: `, { error });
+                return response.status(400).json(error);
+            })
     }
 }
 
