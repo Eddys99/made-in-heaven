@@ -29,7 +29,6 @@ class CreateAccountDTO {
                         console.log(`${$LOG_LABEL} _error: `, { _error });
                         return _error;
                     } else {
-                        console.log(`${$LOG_LABEL} hash: `, { hash });
                         this.password = hash;
                     }
                 });

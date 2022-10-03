@@ -145,6 +145,8 @@ class ValidatorMiddleware {
             return response.json(new ErrorDTO(errors));
         } else if (payload.password !== payload.password2) {
             return response.json(new ErrorDTO("Passwords don't match."));
+        } else if (!validateEmail(payload.email)) {
+            return response.json(new ErrorDTO("This is not a valid email."));
         }
 
         return next();
@@ -198,5 +200,11 @@ function checkIfValuesAreMissing(important_fields, payload, data_type = 'string'
 
     return errors;
 }
+
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 
 module.exports = ValidatorMiddleware;
