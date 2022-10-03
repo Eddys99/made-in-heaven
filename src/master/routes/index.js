@@ -55,6 +55,11 @@ class Router {
                 UserController.authenticate
             );
 
+        router.route('/user/logout')
+            .post(
+                UserController.logout
+            );
+
         app.use('/', router);
 
         return app;

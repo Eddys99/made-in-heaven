@@ -2,7 +2,6 @@ const getUtil = require('src/commons/getUtil');
 
 const UserAccountService = require('../services/user-account-service/user-account-service');
 
-
 const CreateAccountDTO = require('../dtos/create-account-dto');
 const UserAuthenticationDTO = require('../dtos/user-authentication-dto');
 
@@ -43,6 +42,14 @@ class UserController {
                 console.error(`${$LOG_LABEL} authentication failed: `, { error });
                 return response.status(400).json(error);
             })
+    }
+
+    static logout(request, response) {
+        const $JOB_LABEL = 'logout', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        request.logOut();
+
+        console.log(`${$LOG_LABEL} logout done.`);
+        return response.status(200).json({ msg: 'Logout done.' });
     }
 }
 
