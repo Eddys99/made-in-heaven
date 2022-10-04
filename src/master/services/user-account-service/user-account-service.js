@@ -1,6 +1,8 @@
-const UserAccountRepository = require('../../repositories/user-account-repository');
+const bcrypt = require('bcrypt');
 
 const getUtil = require('src/commons/getUtil');
+
+const UserAccountRepository = require('../../repositories/user-account-repository');
 
 const FilterByOne = require('../common-object-builders/filters/filter-by-one-field');
 const FilterByMany = require('../common-object-builders/filters/filter-by-many-fields');
@@ -48,27 +50,6 @@ class UserAccountService {
                     console.error(`${$LOG_LABEL} failed to get user by username: `, { error });
                     return reject(error);
                 });
-        });
-    }
-
-    static authentication(payload) {
-        const $JOB_LABEL = 'authentication', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByOne('username', payload.username);
-
-        return new Promise((resolve, reject) => {
-            return UserAccountRepository.getUser(filter)
-                .then(response => {
-                    if (!getUtil.isObjectWithKeys(response)) {
-                        console.log(`${$LOG_LABEL} username or password don't match`);
-                        return resolve("username or password don't match");
-                    } else {
-
-                    }
-                })
-                .catch(error => {
-                    console.error(`${$LOG_LABEL} failed to get user: `, { error });
-                    return reject(error);
-                })
         });
     }
 }

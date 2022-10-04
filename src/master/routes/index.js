@@ -1,6 +1,7 @@
 const MasterController = require('../controllers/master-controller');
 const ValidatorMiddleware = require('../middlewares/validator-middleware');
 const UserController = require('../controllers/user-controller');
+const passport = require('passport');
 
 class Router {
     constructor(express) {
