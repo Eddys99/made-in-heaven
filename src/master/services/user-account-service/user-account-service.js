@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 const getUtil = require('src/commons/getUtil');
 
 const UserAccountRepository = require('../../repositories/user-account-repository');
