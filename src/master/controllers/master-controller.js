@@ -1,8 +1,8 @@
 const ErrorDTO = require('src/commons/dtos/error-dto.js');
 const ResponseDTO = require('src/commons/dtos/response-dto');
 
-const PostJobService = require('../services/post-job-services/post-job-service');
-const UserService = require('../services/user-services/user-services');
+const PostJobService = require('../services/post-job-service/post-job-service');
+const UserService = require('../services/user-service/user-services');
 const GuildsService = require('../services/guilds-service/guilds-service');
 
 const PostJobDTO = require('../dtos/post-job-dto');

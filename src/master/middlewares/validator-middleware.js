@@ -5,6 +5,8 @@ const PostJobDTO = require('../dtos/post-job-dto');
 const UserCredentialsDTO = require('../dtos/user-credentials-dto');
 const GuildConfigurationDTO = require('../dtos/guild-configuration-dto');
 const RemoveConfigurationDTO = require('../dtos/remove-configuration-dto');
+const UserAccountDTO = require('../dtos/create-account-dto');
+const UserAuthenticationDTO = require('../dtos/user-authentication-dto');
 
 const $LABEL = 'ValidatorMiddleware';
 
@@ -126,6 +128,46 @@ class ValidatorMiddleware {
 
         return next();
     }
+
+    static userAccountRegister(request, response, next) {
+        const $JOB_LABEL = 'userAccountRegister', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserAccountDTO(request.body, true);
+        const string_fields = [
+            'username',
+            'email',
+            'password',
+            'password2'
+        ];
+        const errors = checkIfValuesAreMissing(string_fields, payload);
+
+        if (errors.length > 0) {
+            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
+            return response.json(new ErrorDTO(errors));
+        } else if (payload.password !== payload.password2) {
+            return response.json(new ErrorDTO("Passwords don't match."));
+        } else if (!validateEmail(payload.email)) {
+            return response.json(new ErrorDTO("This is not a valid email."));
+        }
+
+        return next();
+    }
+
+    static userAuthentication(request, response, next) {
+        const $JOB_LABEL = 'userAuthentication', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const payload = new UserAuthenticationDTO(request.body);
+        const string_fields = [
+            'username',
+            'password'
+        ];
+        const errors = checkIfValuesAreMissing(string_fields, payload);
+
+        if (errors.length > 0) {
+            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
+            return response.json(new ErrorDTO(errors));
+        }
+
+        return next();
+    }
 }
 
 function checkIfValuesAreMissing(important_fields, payload, data_type = 'string') {
@@ -158,5 +200,11 @@ function checkIfValuesAreMissing(important_fields, payload, data_type = 'string'
 
     return errors;
 }
+
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 
 module.exports = ValidatorMiddleware;

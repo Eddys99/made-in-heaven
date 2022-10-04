@@ -1,6 +1,6 @@
 const UserModel = require('../models/user-credentials');
 
-const $LABEL = 'MasterRepository';
+const $LABEL = 'UserCredentialsRepository';
 
 class UserCredentialsRepository {
 

@@ -1,5 +1,7 @@
 const MasterController = require('../controllers/master-controller');
 const ValidatorMiddleware = require('../middlewares/validator-middleware');
+const UserController = require('../controllers/user-controller');
+const passport = require('passport');
 
 class Router {
     constructor(express) {
@@ -40,6 +42,23 @@ class Router {
             .post(
                 ValidatorMiddleware.removeServer,
                 MasterController.removeServer
+            );
+
+        router.route('/user/register')
+            .post(
+                ValidatorMiddleware.userAccountRegister,
+                UserController.register
+            );
+
+        router.route('/user/authenticate')
+            .post(
+                ValidatorMiddleware.userAuthentication,
+                UserController.authenticate
+            );
+
+        router.route('/user/logout')
+            .post(
+                UserController.logout
             );
 
         app.use('/', router);
