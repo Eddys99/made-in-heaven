@@ -15,10 +15,11 @@ app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: true }));
 app.use(
     cors({
-        origin: "http://localhost:8000", // <-- location of the react app were connecting to
+        origin: "http://localhost:8000",
         credentials: true,
     })
 );
+
 app.use(
     session({
         secret: "secretcode",
@@ -26,6 +27,7 @@ app.use(
         saveUninitialized: true,
     })
 );
+
 app.use(cookie_parser("secretcode"));
 app.use(passport.initialize());
 app.use(passport.session());
