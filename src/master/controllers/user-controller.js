@@ -7,7 +7,6 @@ const ResponseDTO = require('src/commons/dtos/response-dto');
 const UserAccountService = require('../services/user-account-service/user-account-service');
 
 const CreateAccountDTO = require('../dtos/create-account-dto');
-const UserAuthenticationDTO = require('../dtos/user-authentication-dto');
 
 const $LABEL = 'UserController';
 
