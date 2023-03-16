@@ -6,7 +6,6 @@ const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
 const cors = require('cors');
 const session = require('express-session');
-const passport = require('passport');
 const config = require('config');
 
 const app = express();
@@ -29,9 +28,6 @@ app.use(
 );
 
 app.use(cookie_parser("secretcode"));
-app.use(passport.initialize());
-app.use(passport.session());
-require("../src/passport/passport-config")(passport);
 
 const Routes = require('src/master/routes/index');
 

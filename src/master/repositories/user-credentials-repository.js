@@ -10,14 +10,12 @@ class UserCredentialsRepository {
         return new Promise((resolve, reject) => {
             const newUser = new UserModel(data);
 
-            return newUser.save((error, item) => {
-                if (error) {
+            return newUser.save()
+                .then(item => resolve(newUser))
+                .catch(error => {
                     console.error(`${$LOG_LABEL} failed to save user credentials: `, { error });
                     return reject(error);
-                } else {
-                    return resolve(newUser);
-                }
-            });
+                });
         });
     }
 
@@ -25,14 +23,12 @@ class UserCredentialsRepository {
         const $JOB_LABEL = 'getUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
         return new Promise((resolve, reject) => {
-           UserModel.findOne(filter, null, null, (error, response) => {
-               if (error) {
+           return UserModel.findOne(filter, null, null)
+               .then(response => resolve(response))
+               .catch(error => {
                    console.error(`${$LOG_LABEL} couldn't find user: `, { error });
                    return reject(error);
-               } else {
-                   return resolve(response);
-               }
-           });
+               })
         });
     }
 
@@ -40,15 +36,15 @@ class UserCredentialsRepository {
         const $JOB_LABEL = 'updateUser', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
 
         return new Promise((resolve, reject) => {
-            UserModel.updateOne(filter, query, null, (error, response) => {
-                if (error) {
-                    console.error(`${$LOG_LABEL} failed to update user credentials: `, { error });
-                    return reject(error);
-                } else {
+            return UserModel.updateOne(filter, query, null)
+                .then(response => {
                     updateTimestamps(filter);
                     return resolve(response);
-                }
-            });
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} failed to update user credentials: `, { error });
+                    return reject(error);
+                });
         });
     }
 }

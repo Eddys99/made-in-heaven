@@ -30,12 +30,9 @@ class ValidatorMiddleware {
             ...checkIfValuesAreMissing(number_fields, payload, 'number')
         ];
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static postJob(request, response, next) {
@@ -46,12 +43,9 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static addChannel(request, response, next) {
@@ -67,12 +61,9 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static removeChannel(request, response, next) {
@@ -86,12 +77,9 @@ class ValidatorMiddleware {
 
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static registerServer(request, response, next) {
@@ -105,12 +93,9 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static removeServer(request, response, next) {
@@ -121,12 +106,9 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
     }
 
     static userAccountRegister(request, response, next) {
@@ -140,16 +122,13 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        } else if (payload.password !== payload.password2) {
-            return response.json(new ErrorDTO("Passwords don't match."));
-        } else if (!validateEmail(payload.email)) {
-            return response.json(new ErrorDTO("This is not a valid email."));
-        }
-
-        return next();
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : (payload.password !== payload.password2)
+                ? response.status(400).json(new ErrorDTO("Passwords don't match."))
+                : (!validateEmail(payload.email))
+                    ? response.status(400).json(new ErrorDTO("This is not a valid email."))
+                    : next();
     }
 
     static userAuthentication(request, response, next) {
@@ -161,12 +140,19 @@ class ValidatorMiddleware {
         ];
         const errors = checkIfValuesAreMissing(string_fields, payload);
 
-        if (errors.length > 0) {
-            console.error(`${$LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
-            return response.json(new ErrorDTO(errors));
-        }
+        return (rejectOnEncounteredError(errors, $LOG_LABEL))
+            ? response.status(400).json(new ErrorDTO(errors))
+            : next();
+    }
+}
 
-        return next();
+function rejectOnEncounteredError(errors = [], LOG_LABEL, payload) {
+    if (errors.length > 0) {
+        console.error(`${LOG_LABEL} Some credentials are missing: `, new ErrorDTO(errors));
+        console.error(`${LOG_LABEL} Failed payload: `, payload);
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -182,7 +168,10 @@ function checkIfValuesAreMissing(important_fields, payload, data_type = 'string'
             isValid = getUtil.isNumber;
             break;
         case 'object':
-            isValid = getUtil.isObject;
+            isValid = getUtil.isObjectWithKeys;
+            break;
+        case 'array':
+            isValid = getUtil.isArrayWithItems;
             break;
 
         default:
@@ -194,8 +183,99 @@ function checkIfValuesAreMissing(important_fields, payload, data_type = 'string'
         if (payload[field] === undefined) {
             errors.push(`[${field}] is missing`);
         } else if (!isValid(payload[field])) {
-            errors.push(`[${field}] has to be a ${data_type}`);
+            errors.push(`[${field}] has to be a(n) ${data_type}`);
         }
+    });
+
+    return errors;
+}
+
+function checkIfValuesAreMissingV2(payload, data_structure) {
+    let errors = [];
+
+    data_structure.forEach(schema => {
+        let isValid;
+        let isValidSecond = (!getUtil.isNumber(payload[schema.name]) && !getUtil.isNotEmptyString(payload[schema.name]));
+
+        switch (schema.type) {
+            case 'boolean':
+                isValid = getUtil.isBoolean;
+                break;
+            case 'number':
+                isValid = getUtil.isNumber;
+                break;
+            case 'object':
+                isValid = getUtil.isObjectWithKeys;
+                break;
+            case 'array':
+                isValid = getUtil.isArrayWithItems;
+                break;
+
+            default:
+                isValid = getUtil.isNotEmptyString;
+                break;
+        }
+
+        const checkIfValueIsValid = (!Array.isArray(schema.type))
+            ? (!isValid(payload[schema.name]))
+            : (isValidSecond)
+
+        if (payload[schema.name] === undefined || payload[schema.name] === null) {
+            (schema.required === true)
+                ? errors.push(`[${schema.name}] is missing`)
+                : console.log(`[optional field][${schema.name}] is missing`);
+        } else if (checkIfValueIsValid) {
+            errors.push(`[${schema.name}] has to be a(n) ${schema.type}`);
+        } else if (schema.type === "object" && Array.isArray(payload[schema.name])) {
+            errors.push(`[${schema.name}] has to be a(n) ${schema.type}`);
+        }
+
+        if (getUtil.isArrayWithItems(schema.properties)) {
+            (getUtil.isObjectWithKeys(payload[schema.name]) && !getUtil.isArrayWithItems(payload[schema.name]))
+                ? errors = [...errors, ...checkIfValuesAreMissingV2(payload[schema.name], schema.properties)]
+                : (getUtil.isArrayWithItems(payload[schema.name]))
+                    ? errors = [...errors, ...checkArrayFields(payload[schema.name], schema.properties)]
+                    : console.log(`[${schema.name}] is missing or has no properties`);
+        }
+    });
+
+    return errors;
+}
+
+function checkArrayFields(payload, data_structure) {
+    let errors = [];
+
+    payload.forEach(element => {
+        data_structure.forEach(schema => {
+            let isValid;
+
+            switch (schema.type) {
+                case 'boolean':
+                    isValid = getUtil.isBoolean;
+                    break;
+                case 'number':
+                    isValid = getUtil.isNumber;
+                    break;
+                case 'object':
+                    isValid = getUtil.isObjectWithKeys;
+                    break;
+                case 'array':
+                    isValid = getUtil.isArrayWithItems;
+                    break;
+
+                default:
+                    isValid = getUtil.isNotEmptyString;
+                    break;
+            }
+
+            if (element[schema.name] === undefined || element[schema.name] === null) {
+                (schema.required === true)
+                    ? errors.push(`[${schema.name}] is missing`)
+                    : console.log(`[optional field][${schema.name}] is missing`);
+            } else if (!isValid(element[schema.name])) {
+                errors.push(`[${schema.name}] has to be a(n) ${schema.type}`);
+            }
+        });
     });
 
     return errors;

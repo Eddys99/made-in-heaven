@@ -10,14 +10,12 @@ class PostJobsRepository {
         return new Promise((resolve, reject) => {
             const newJob = new PostJob(data);
 
-            return newJob.save((error, item) => {
-                if (error) {
+            return newJob.save()
+                .then(item => resolve(newJob))
+                .catch(error => {
                     console.error(`${$LOG_LABEL} post job failed: `, { error });
                     return reject(error);
-                } else {
-                    return resolve(newJob);
-                }
-            });
+                });
         })
     }
 }

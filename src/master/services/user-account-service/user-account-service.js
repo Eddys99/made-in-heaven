@@ -50,6 +50,22 @@ class UserAccountService {
                 });
         });
     }
+
+    static getUser(payload) {
+        const $JOB_LABEL = 'registerUserAccount', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
+        const filter = new FilterByOne(payload.username);
+
+        return new Promise((resolve, reject) => {
+            return UserAccountRepository.getUser(filter)
+                .then(response => {
+                    return resolve(response);
+                })
+                .catch(error => {
+                    console.error(`${$LOG_LABEL} failed to get user: `, { error });
+                    return reject(error);
+                });
+        })
+    }
 }
 
 module.exports = UserAccountService;

@@ -1,5 +1,5 @@
 class ErrorDTO {
-    constructor(error, msg = null, data = null) {
+    constructor(error = null, msg = null, data = null) {
         this.error = error;
         this.error_s = error.toString();
         this.success = false;

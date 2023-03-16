@@ -153,12 +153,14 @@ class GuildsService {
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
                 .then(response => {
+                    if (!!response) {
+                        response.target_channels.forEach((element) => {
+                            if (element.channel_id === channel_id) {
+                                return resolve(1);
+                            }
+                        });
+                    }
 
-                    response.target_channels.forEach((element) => {
-                        if (element.channel_id === channel_id) {
-                            return resolve(1);
-                        }
-                    })
                     return resolve(0);
                 })
                 .catch(error => {
