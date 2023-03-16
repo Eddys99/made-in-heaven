@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://Eduard:1999RONAV@made-in-heaven.cavfxih.mongodb.net/made-in-heaven', {
+mongoose.connect('mongodb+srv://Eduard:admin@made-in-heaven.cavfxih.mongodb.net/made-in-heaven', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
