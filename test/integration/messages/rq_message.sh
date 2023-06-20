@@ -3,7 +3,7 @@ curl -X POST \
     -H 'cache-control: no-cache' \
     -H 'content-type: application/json' \
     -d '{
-        "user_id": "test_id",
+        "user_id": "test_uid",
         "message": "Hello server"
     }'
 
