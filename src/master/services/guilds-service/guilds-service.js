@@ -108,7 +108,7 @@ class GuildsService {
 
     static getUsersTargetChannels(payload) {
         const $JOB_LABEL = 'getTargetChannels', $LOG_LABEL = `[${$LABEL}][${$JOB_LABEL}]`;
-        const filter = new FilterByManyFields({ discord_user_id: payload.discord_user_id, server_id: payload.server_id });
+        const filter = new FilterByOneField('user_id', payload.user_id);
 
         return new Promise((resolve, reject) => {
             return GuildsRepository.getOneGuild(filter)
